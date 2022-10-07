@@ -1,8 +1,7 @@
 package com.smingsming.song.entity.song.service;
 
-import com.smingsming.song.entity.song.entity.SongEntity;
-import com.smingsming.song.entity.song.vo.FormalSongAddRequestVo;
+import com.smingsming.song.entity.song.vo.FormalSongAddReqVo;
 
 public interface ISongService {
-    boolean formalSongAdd(FormalSongAddRequestVo requestVo);
+    boolean formalSongAdd(FormalSongAddReqVo requestVo);
 }

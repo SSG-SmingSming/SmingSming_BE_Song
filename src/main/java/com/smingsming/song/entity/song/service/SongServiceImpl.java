@@ -6,7 +6,7 @@ import com.smingsming.song.entity.artist.entity.Artist;
 import com.smingsming.song.entity.artist.repository.IArtistRepository;
 import com.smingsming.song.entity.song.entity.SongEntity;
 import com.smingsming.song.entity.song.repository.ISongRepository;
-import com.smingsming.song.entity.song.vo.FormalSongAddRequestVo;
+import com.smingsming.song.entity.song.vo.FormalSongAddReqVo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -23,7 +23,7 @@ public class SongServiceImpl implements ISongService {
     private final IArtistRepository iArtistRepository;
 
     @Override
-    public boolean formalSongAdd(FormalSongAddRequestVo requestVo) {
+    public boolean formalSongAdd(FormalSongAddReqVo requestVo) {
         Optional<Album> album = iAlbumRepository.findById(requestVo.getAlbum());
         Optional<Artist> artist = iArtistRepository.findById(requestVo.getArtist());
 

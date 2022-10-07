@@ -1,7 +1,7 @@
 package com.smingsming.song.entity.song.controller;
 
 import com.smingsming.song.entity.song.service.ISongService;
-import com.smingsming.song.entity.song.vo.FormalSongAddRequestVo;
+import com.smingsming.song.entity.song.vo.FormalSongAddReqVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ public class SongController {
     private final ISongService iSongService;
 
     @PostMapping("/formaladd")
-    public ResponseEntity<?> formalSongAdd(@RequestBody FormalSongAddRequestVo requestVo) {
+    public ResponseEntity<?> formalSongAdd(@RequestBody FormalSongAddReqVo requestVo) {
         boolean result = iSongService.formalSongAdd(requestVo);
 
         if (result)
@@ -25,5 +25,5 @@ public class SongController {
         else
             return ResponseEntity.status(HttpStatus.OK).body(false);
     }
-    
+
 }
