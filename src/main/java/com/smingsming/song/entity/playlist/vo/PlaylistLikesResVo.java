@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaylistLikesDeleteRequestVo {
+public class PlaylistLikesResVo {
 
     private Long id;
-    private Long userId;
+    private Long playlistEntityId;
+
 }

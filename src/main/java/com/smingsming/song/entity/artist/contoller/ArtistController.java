@@ -1,7 +1,7 @@
 package com.smingsming.song.entity.artist.contoller;
 
-import com.smingsming.song.entity.artist.entity.Artist;
-import com.smingsming.song.entity.artist.vo.ArtistAddRequestVo;
+import com.smingsming.song.entity.artist.entity.ArtistEntity;
+import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import com.smingsming.song.entity.artist.service.IArtistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,8 +18,8 @@ public class ArtistController {
 
     @PostMapping(value = "/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> addArtist(@RequestParam("artistThumbnail") MultipartFile artistThumbnail,
-                                       @RequestPart ArtistAddRequestVo artistDto) {
-        Artist result = iArtistService.addArtist(artistDto, artistThumbnail);
+                                       @RequestPart ArtistAddReqVo artistDto) {
+        ArtistEntity result = iArtistService.addArtist(artistDto, artistThumbnail);
 
         if(result != null)
             return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -29,7 +29,7 @@ public class ArtistController {
 
     @GetMapping(value = "/get/{artistId}")
     public ResponseEntity<?> getArtist(@PathVariable("artistId") Long artistId) {
-        Artist result = iArtistService.getArtist(artistId);
+        ArtistEntity result = iArtistService.getArtist(artistId);
 
         if (result != null)
             return ResponseEntity.status(HttpStatus.OK).body(result);

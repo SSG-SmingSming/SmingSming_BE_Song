@@ -4,9 +4,9 @@ import com.smingsming.song.entity.playlist.entity.PlaylistEntity;
 import com.smingsming.song.entity.playlist.entity.PlaylistLikesEntity;
 import com.smingsming.song.entity.playlist.repository.IPlaylistLikesRepository;
 import com.smingsming.song.entity.playlist.repository.IPlaylistRepository;
-import com.smingsming.song.entity.playlist.vo.PlaylistLikesAddRequestVo;
-import com.smingsming.song.entity.playlist.vo.PlaylistLikesDeleteRequestVo;
-import com.smingsming.song.entity.playlist.vo.PlaylistLikesResponseVo;
+import com.smingsming.song.entity.playlist.vo.PlaylistLikesAddReqVo;
+import com.smingsming.song.entity.playlist.vo.PlaylistLikesDeleteReqVo;
+import com.smingsming.song.entity.playlist.vo.PlaylistLikesResVo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -24,14 +24,14 @@ public class PlaylistLikesServiceImpl implements IPlaylistLikesService{
 
     // 플레이리스트 좋아요 추가
     @Override
-    public PlaylistLikesEntity addPlaylistLikes(PlaylistLikesAddRequestVo playlistLikesAddRequestVo) {
+    public PlaylistLikesEntity addPlaylistLikes(PlaylistLikesAddReqVo playlistLikesAddReqVo) {
 
-        Optional<PlaylistEntity> playlistEntity = iPlaylistRepository.findById(playlistLikesAddRequestVo.getPlaylistEntityId());
+        Optional<PlaylistEntity> playlistEntity = iPlaylistRepository.findById(playlistLikesAddReqVo.getPlaylistEntityId());
 
         if (playlistEntity.isPresent()) {
 
             PlaylistLikesEntity playlistLikesEntity = PlaylistLikesEntity.builder()
-                    .userId(playlistLikesAddRequestVo.getUserId())
+                    .userId(playlistLikesAddReqVo.getUserId())
                     .playlistEntity(playlistEntity.get()).build();
 
             PlaylistLikesEntity result = iPlaylistLikesRepository.save(playlistLikesEntity);
@@ -45,15 +45,15 @@ public class PlaylistLikesServiceImpl implements IPlaylistLikesService{
 
     // 좋아요한 플레이리스트 조회
     @Override
-    public List<PlaylistLikesResponseVo> getPlaylistLikes(Long userId) {
+    public List<PlaylistLikesResVo> getPlaylistLikes(Long userId) {
         Iterable<PlaylistLikesEntity> playlistLikes = iPlaylistLikesRepository.findAllByUserId(userId);
 
-        List<PlaylistLikesResponseVo> result = new ArrayList<>();
+        List<PlaylistLikesResVo> result = new ArrayList<>();
 
         ModelMapper mapper = new ModelMapper();
 
         playlistLikes.forEach(v -> {
-            result.add(mapper.map(v, PlaylistLikesResponseVo.class));
+            result.add(mapper.map(v, PlaylistLikesResVo.class));
         });
 
         return result;
@@ -62,12 +62,12 @@ public class PlaylistLikesServiceImpl implements IPlaylistLikesService{
 
     // 플레이리스트 좋아요 취소
     @Override
-    public boolean deletePlaylistLikes(PlaylistLikesDeleteRequestVo playlistLikesDeleteRequestVo) {
+    public boolean deletePlaylistLikes(PlaylistLikesDeleteReqVo playlistLikesDeleteReqVo) {
 //        Optional<PlaylistLikesEntity> user = iPlaylistLikesRepository.findById(playlistLikesDeleteRequestVo.getUserId());
-        Optional<PlaylistLikesEntity> likes = iPlaylistLikesRepository.findById(playlistLikesDeleteRequestVo.getId());
+        Optional<PlaylistLikesEntity> likes = iPlaylistLikesRepository.findById(playlistLikesDeleteReqVo.getId());
 
-        if(likes.isPresent() && likes.get().getUserId().equals(playlistLikesDeleteRequestVo.getUserId())) {
-            iPlaylistLikesRepository.deleteById(playlistLikesDeleteRequestVo.getId());
+        if(likes.isPresent() && likes.get().getUserId().equals(playlistLikesDeleteReqVo.getUserId())) {
+            iPlaylistLikesRepository.deleteById(playlistLikesDeleteReqVo.getId());
             return true;
         }
 
