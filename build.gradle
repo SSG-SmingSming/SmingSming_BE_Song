@@ -29,6 +29,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
@@ -46,10 +48,10 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-task copyPrivate(type: Copy) {
-	copy {
-		from './SmingSming_BE_Settings/song'
-		include "*.yml"
-		into 'src/main/resources'
-	}
-}
+//task copyPrivate(type: Copy) {
+//	copy {
+//		from './SmingSming_BE_Settings/song'
+//		include "*.yml"
+//		into 'src/main/resources'
+//	}
+//}
