@@ -21,7 +21,7 @@ public class FileInfoDto {
     private LocalDateTime createTime = LocalDateTime.now();
 
 
-    public static FileInfoDto multipartOf(MultipartFile multipartFile, String photoDiv) {
+    public static FileInfoDto multipartOf(MultipartFile multipartFile, String fileDiv) {
         final String fileId = MultipartUtil.createFileUUID();
         final String fileName = multipartFile.getOriginalFilename();
         final String format = fileName.substring(fileName.lastIndexOf('.') + 1);
@@ -31,7 +31,7 @@ public class FileInfoDto {
                 .name(multipartFile.getOriginalFilename())
                 .format(format)
                 .localPath(MultipartUtil.createLocalPath(fileId, format))
-                .remotePath(MultipartUtil.createRemotePath(photoDiv, fileId, format))
+                .remotePath(MultipartUtil.createRemotePath(fileDiv, fileId, format))
                 .bytes(multipartFile.getSize())
                 .build();
     }
