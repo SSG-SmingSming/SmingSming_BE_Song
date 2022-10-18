@@ -1,6 +1,6 @@
 package com.smingsming.song.entity.artist.service;
 
-import com.smingsming.song.entity.artist.entity.Artist;
+import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.vo.ArtistAddRequestVo;
 import com.smingsming.song.entity.artist.repository.IArtistRepository;
 import com.smingsming.song.global.utils.s3.FileInfoDto;
@@ -21,27 +21,27 @@ public class ArtistServicIempl implements IArtistService{
     private final S3UploadService s3UploadService;
 
     @Override
-    public Artist addArtist(ArtistAddRequestVo artistDto, MultipartFile artistThumbnail) {
+    public ArtistEntity addArtist(ArtistAddRequestVo artistDto, MultipartFile artistThumbnail) {
 
         ModelMapper mapper = new ModelMapper();
 
         FileInfoDto fileInfoDto = FileInfoDto.multipartOf(artistThumbnail, "artist");
         String uri = s3UploadService.store(fileInfoDto, artistThumbnail);
 
-        Artist mapArtist = mapper.map(artistDto, Artist.class);
-        mapArtist.setArtistThumbnail(uri);
+        ArtistEntity mapArtistEntity = mapper.map(artistDto, ArtistEntity.class);
+        mapArtistEntity.setArtistThumbnail(uri);
 
-        Artist artist = iArtistRepository.save(mapArtist);
+        ArtistEntity artistEntity = iArtistRepository.save(mapArtistEntity);
 
-        if(artist != null)
-            return artist;
+        if(artistEntity != null)
+            return artistEntity;
         else
             return null;
     }
 
     @Override
-    public Artist getArtist(Long artistId) {
-        Optional<Artist> artist = iArtistRepository.findById(artistId);
+    public ArtistEntity getArtist(Long artistId) {
+        Optional<ArtistEntity> artist = iArtistRepository.findById(artistId);
 
         if(artist.isPresent())
             return artist.get();
@@ -53,12 +53,12 @@ public class ArtistServicIempl implements IArtistService{
     @Transactional
     public boolean updateArtist(Long artistId, MultipartFile artistThumbnail) {
 
-        Artist artist = iArtistRepository.findById(artistId).orElseThrow();
+        ArtistEntity artistEntity = iArtistRepository.findById(artistId).orElseThrow();
 
         FileInfoDto fileInfoDto = FileInfoDto.multipartOf(artistThumbnail, "artist");
         String uri = s3UploadService.store(fileInfoDto, artistThumbnail);
 
-        artist.updateThumbnail(uri);
+        artistEntity.updateThumbnail(uri);
 
         return true;
     }
@@ -66,7 +66,7 @@ public class ArtistServicIempl implements IArtistService{
     @Override
     public boolean deleteArtist(Long artistId) {
 
-        Optional<Artist> artist = iArtistRepository.findById(artistId);
+        Optional<ArtistEntity> artist = iArtistRepository.findById(artistId);
 
         if(artist.isPresent()) {
             iArtistRepository.deleteById(artistId);

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Table(name = "artist")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Artist {
+public class ArtistEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class Artist {
     private LocalDate debutDate;
 
     @Builder
-    public Artist(String name, String artistThumbnail, LocalDate debutDate) {
+    public ArtistEntity(String name, String artistThumbnail, LocalDate debutDate) {
         this.name = name;
         this.artistThumbnail = artistThumbnail;
         this.debutDate = debutDate;

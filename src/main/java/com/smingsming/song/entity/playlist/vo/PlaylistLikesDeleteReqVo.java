@@ -1,13 +1,14 @@
 package com.smingsming.song.entity.playlist.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
-public class PlaylistAddRequestVo {
+public class PlaylistLikesDeleteReqVo {
 
-    private String title;
+    private Long id;
     private Long userId;
-
 }

@@ -1,6 +1,6 @@
 package com.smingsming.song.entity.album.service;
 
-import com.smingsming.song.entity.album.entity.Album;
+import com.smingsming.song.entity.album.entity.AlbumEntity;
 import com.smingsming.song.entity.album.vo.AlbumAddRequestVo;
 import com.smingsming.song.entity.album.repository.IAlbumRepository;
 import com.smingsming.song.global.utils.s3.FileInfoDto;
@@ -20,27 +20,27 @@ public class AlbumServiceImpl implements IAlbumService{
     private final S3UploadService s3UploadService;
 
     @Override
-    public Album addAlbum(AlbumAddRequestVo albumDto, MultipartFile albumThumbnail) {
+    public AlbumEntity addAlbum(AlbumAddRequestVo albumDto, MultipartFile albumThumbnail) {
 
         ModelMapper mapper = new ModelMapper();
 
         FileInfoDto fileInfoDto = FileInfoDto.multipartOf(albumThumbnail, "album");
         String uri = s3UploadService.store(fileInfoDto, albumThumbnail);
 
-        Album mapAlbum = mapper.map(albumDto, Album.class);
-        mapAlbum.setAlbumThumbnail(uri);
+        AlbumEntity mapAlbumEntity = mapper.map(albumDto, AlbumEntity.class);
+        mapAlbumEntity.setAlbumThumbnail(uri);
 
-        Album album = iAlbumRepository.save(mapAlbum);
+        AlbumEntity albumEntity = iAlbumRepository.save(mapAlbumEntity);
 
-        if(album != null)
-            return album;
+        if(albumEntity != null)
+            return albumEntity;
         else
             return null;
     }
 
     @Override
     public boolean deleteAlbum(Long albumId) {
-        Optional<Album> album = iAlbumRepository.findById(albumId);
+        Optional<AlbumEntity> album = iAlbumRepository.findById(albumId);
 
         if(album.isPresent()) {
             iAlbumRepository.deleteById(albumId);
@@ -51,8 +51,8 @@ public class AlbumServiceImpl implements IAlbumService{
     }
 
     @Override
-    public Album getAlbum(Long albumId) {
-        Optional<Album> album = iAlbumRepository.findById(albumId);
+    public AlbumEntity getAlbum(Long albumId) {
+        Optional<AlbumEntity> album = iAlbumRepository.findById(albumId);
 
         if(album.isPresent())
             return album.get();

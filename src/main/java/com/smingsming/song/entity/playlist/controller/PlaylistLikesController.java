@@ -1,10 +1,9 @@
 package com.smingsming.song.entity.playlist.controller;
 
-import com.smingsming.song.entity.playlist.entity.PlaylistLikesEntity;
 import com.smingsming.song.entity.playlist.service.IPlaylistLikesService;
-import com.smingsming.song.entity.playlist.vo.PlaylistLikesAddRequestVo;
-import com.smingsming.song.entity.playlist.vo.PlaylistLikesDeleteRequestVo;
-import com.smingsming.song.entity.playlist.vo.PlaylistLikesResponseVo;
+import com.smingsming.song.entity.playlist.vo.PlaylistLikesAddReqVo;
+import com.smingsming.song.entity.playlist.vo.PlaylistLikesDeleteReqVo;
+import com.smingsming.song.entity.playlist.vo.PlaylistLikesResVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,28 +12,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/song-server/playlist/likes")
+@RequestMapping("playlist/likes")
 @RequiredArgsConstructor
 public class PlaylistLikesController {
 
     private final IPlaylistLikesService iPlaylistLikesService;
 
-    // 플레이리스트 좋아요 추가
+    // 플레이리스트 좋아요 추가, 한 번 더 실행 시 취소
     @PostMapping(value = "/add")
-    public ResponseEntity<?> addPlaylistLikes(@RequestBody PlaylistLikesAddRequestVo playlistLikesAddRequestVo) {
-        PlaylistLikesEntity playlistLikesEntity  = iPlaylistLikesService.addPlaylistLikes(playlistLikesAddRequestVo);
+    public ResponseEntity<?> addPlaylistLikes(@RequestBody PlaylistLikesAddReqVo playlistLikesAddReqVo) {
 
-        if(playlistLikesEntity != null)
-            return ResponseEntity.status(HttpStatus.OK).body(playlistLikesEntity);
-        else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("다시 시도해주세요.");
+        String playlistLikes = iPlaylistLikesService.addPlaylistLikes(playlistLikesAddReqVo);
+
+        return ResponseEntity.status(HttpStatus.OK).body(playlistLikes);
     }
 
 
     // 좋아요한 플레이리스트 조회
     @GetMapping(value = "/get/{userId}")
     public ResponseEntity<?> getPlaylistLikes(@PathVariable(value = "userId") Long userId) {
-        List<PlaylistLikesResponseVo> result = iPlaylistLikesService.getPlaylistLikes(userId);
+        List<PlaylistLikesResVo> result = iPlaylistLikesService.getPlaylistLikes(userId);
 
         if(result.size() != 0)
             return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -44,7 +41,7 @@ public class PlaylistLikesController {
 
     // 플레이리스트 좋아요 취소
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<?> deletePlaylistLikes(@RequestBody PlaylistLikesDeleteRequestVo playlistLikesDeleteRequestVo) {
+    public ResponseEntity<?> deletePlaylistLikes(@RequestBody PlaylistLikesDeleteReqVo playlistLikesDeleteRequestVo) {
         boolean result = iPlaylistLikesService.deletePlaylistLikes(playlistLikesDeleteRequestVo);
 
         if(result)

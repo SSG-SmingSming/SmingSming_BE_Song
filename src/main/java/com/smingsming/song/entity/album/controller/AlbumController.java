@@ -1,6 +1,6 @@
 package com.smingsming.song.entity.album.controller;
 
-import com.smingsming.song.entity.album.entity.Album;
+import com.smingsming.song.entity.album.entity.AlbumEntity;
 import com.smingsming.song.entity.album.vo.AlbumAddRequestVo;
 import com.smingsming.song.entity.album.service.IAlbumService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class AlbumController {
     @PostMapping(value = "/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> addAlbum(@RequestParam("albumThumbnail")MultipartFile albumThumbnail,
                                       @RequestPart AlbumAddRequestVo albumDto) {
-        Album result = iAlbumService.addAlbum(albumDto, albumThumbnail);
+        AlbumEntity result = iAlbumService.addAlbum(albumDto, albumThumbnail);
 
         if(result != null)
             return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -29,7 +29,7 @@ public class AlbumController {
 
     @GetMapping(value = "/get/{albumId}")
     public ResponseEntity<?> getAlbum(@PathVariable(value = "albumId") Long albumId) {
-        Album result = iAlbumService.getAlbum(albumId);
+        AlbumEntity result = iAlbumService.getAlbum(albumId);
 
         if(result != null)
             return ResponseEntity.status(HttpStatus.OK).body(result);

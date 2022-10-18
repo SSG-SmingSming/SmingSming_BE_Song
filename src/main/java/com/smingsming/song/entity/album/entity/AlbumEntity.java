@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Table(name = "album")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Album {
+public class AlbumEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class Album {
     private LocalDate releaseDate;
 
     @Builder
-    public Album(String title, String albumThumbnail, LocalDate releaseDate) {
+    public AlbumEntity(String title, String albumThumbnail, LocalDate releaseDate) {
         this.title = title;
         this.albumThumbnail = albumThumbnail;
         this.releaseDate = releaseDate;
