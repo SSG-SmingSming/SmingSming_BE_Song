@@ -7,7 +7,8 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-public class ArtistAddRequestVo {
+public class ArtistAddReqVo {
     private String name;
     private LocalDate debutDate;
+    private String artistThumbnail;
 }

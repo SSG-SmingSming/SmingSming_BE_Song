@@ -10,4 +10,5 @@ import java.time.LocalDate;
 public class AlbumAddRequestVo {
     private String title;
     private LocalDate releaseDate;
+    private String albumThumbnail;
 }

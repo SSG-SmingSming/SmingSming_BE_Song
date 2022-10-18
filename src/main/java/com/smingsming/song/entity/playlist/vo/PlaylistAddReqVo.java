@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class PlaylistAddRequestVo {
+public class PlaylistAddReqVo {
 
     private String title;
     private Long userId;
