@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IPlaylistLikesService {
 
-    PlaylistLikesEntity addPlaylistLikes(PlaylistLikesAddReqVo playlistLikesAddReqVo);
+    String addPlaylistLikes(PlaylistLikesAddReqVo playlistLikesAddReqVo);
     List<PlaylistLikesResVo> getPlaylistLikes(Long Id);
     boolean deletePlaylistLikes(PlaylistLikesDeleteReqVo playlistLikesDeleteReqVo);
 }

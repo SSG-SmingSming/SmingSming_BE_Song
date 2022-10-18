@@ -15,7 +15,7 @@ public interface ISongRepository extends JpaRepository<SongEntity, Long> {
             " s.id, s.songThumbUri, s.songName, artist.name, album.title, s.songUri, s.formal,s.userId " +
             ")" +
             " from SongEntity s" +
-            " left join AlbumEntity album on s.album.id = album.id " +
+            " left join AlbumEntity album on s.albumEntity.id = album.id " +
             " left join ArtistEntity artist on s.artist.id = artist.id" +
             " where s.songName like :keyword " +
             " or album.title like :keyword " +

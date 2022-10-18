@@ -4,6 +4,7 @@ import com.smingsming.song.entity.playlist.entity.PlaylistEntity;
 import com.smingsming.song.entity.playlist.entity.PlaylistTrackEntity;
 import com.smingsming.song.entity.playlist.service.IPlaylistService;
 import com.smingsming.song.entity.playlist.vo.PlaylistAddReqVo;
+import com.smingsming.song.entity.playlist.vo.PlaylistUpdateReqVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class PlaylistController {
     // 플레이리스트 생성
 
     @PostMapping(value = "/add")
-    public ResponseEntity<?> addArtist(@RequestBody PlaylistAddReqVo playlistAddReqVo) {
+    public ResponseEntity<?> addPlaylist(@RequestBody PlaylistAddReqVo playlistAddReqVo) {
         PlaylistEntity playlistEntity = iPlaylistService.addPlaylist(playlistAddReqVo);
 
         if(playlistEntity != null)
