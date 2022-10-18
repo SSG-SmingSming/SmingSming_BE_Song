@@ -22,24 +22,27 @@ public class PlaylistLikesServiceImpl implements IPlaylistLikesService{
     private final IPlaylistLikesRepository iPlaylistLikesRepository;
     private final IPlaylistRepository iPlaylistRepository;
 
-    // 플레이리스트 좋아요 추가
+
+    // 플레이리스트 좋아요 추가, 한 번 더 실행 시 취소
     @Override
-    public PlaylistLikesEntity addPlaylistLikes(PlaylistLikesAddReqVo playlistLikesAddReqVo) {
+    public String addPlaylistLikes(PlaylistLikesAddReqVo playlistLikesAddReqVo) {
 
-        Optional<PlaylistEntity> playlistEntity = iPlaylistRepository.findById(playlistLikesAddReqVo.getPlaylistEntityId());
+        PlaylistEntity playlistEntity = iPlaylistRepository.getById(playlistLikesAddReqVo.getPlaylistEntityId());
+        PlaylistLikesEntity playlistLikes = iPlaylistLikesRepository.findByUserIdAndPlaylistEntityId(playlistLikesAddReqVo.getUserId(), playlistLikesAddReqVo.getPlaylistEntityId());
 
-        if (playlistEntity.isPresent()) {
-
-            PlaylistLikesEntity playlistLikesEntity = PlaylistLikesEntity.builder()
+        if (playlistLikes == null) {
+            PlaylistLikesEntity addLikes = PlaylistLikesEntity.builder()
                     .userId(playlistLikesAddReqVo.getUserId())
-                    .playlistEntity(playlistEntity.get()).build();
+                    .playlistEntity(playlistEntity).build();
 
-            PlaylistLikesEntity result = iPlaylistLikesRepository.save(playlistLikesEntity);
-            return result;
+            iPlaylistLikesRepository.save(addLikes);
+            return "좋아요 성공";
         }
 
-        else
-            return null;
+        else {
+            iPlaylistLikesRepository.delete(playlistLikes);
+            return "좋아요 취소";
+        }
     }
 
 
@@ -63,7 +66,6 @@ public class PlaylistLikesServiceImpl implements IPlaylistLikesService{
     // 플레이리스트 좋아요 취소
     @Override
     public boolean deletePlaylistLikes(PlaylistLikesDeleteReqVo playlistLikesDeleteReqVo) {
-//        Optional<PlaylistLikesEntity> user = iPlaylistLikesRepository.findById(playlistLikesDeleteRequestVo.getUserId());
         Optional<PlaylistLikesEntity> likes = iPlaylistLikesRepository.findById(playlistLikesDeleteReqVo.getId());
 
         if(likes.isPresent() && likes.get().getUserId().equals(playlistLikesDeleteReqVo.getUserId())) {

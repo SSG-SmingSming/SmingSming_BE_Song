@@ -1,5 +1,7 @@
 package com.smingsming.song.entity.playlist.entity;
 
+import com.smingsming.song.entity.album.entity.AlbumEntity;
+import com.smingsming.song.entity.song.entity.SongEntity;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -7,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @Entity
@@ -35,6 +36,9 @@ public class PlaylistEntity {
     @NotNull
     private Long userId;
 
+//    private SongEntity songEntity;
+//
+//    private AlbumEntity albumEntity;
 
     // 음악 넣기 !
 
@@ -48,7 +52,7 @@ public class PlaylistEntity {
     public void updateThumbnail(String playlistThumbnail) {
         this.playlistThumbnail = playlistThumbnail;
     }
-//
+
 //    @OneToMany(
 //            mappedBy = "playlistEntity",
 //            cascade = CascadeType.ALL,

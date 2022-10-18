@@ -50,7 +50,7 @@ public class SongServiceImpl implements ISongService {
 
         SongEntity mapSong = mapper.map(requestVo, SongEntity.class);
         mapSong.setFormal(true);
-        mapSong.setAlbum(album.get());
+        mapSong.setAlbumEntity(album.get());
         mapSong.setArtist(artist.get());
 
         iSongRepository.save(mapSong);
@@ -77,7 +77,7 @@ public class SongServiceImpl implements ISongService {
 
         SongEntity mapSong = mapper.map(requestVo, SongEntity.class);
         mapSong.setFormal(false);
-        mapSong.setAlbum(album);
+        mapSong.setAlbumEntity(album);
         mapSong.setUserId(user.getId());
 
         iSongRepository.save(mapSong);
@@ -116,7 +116,7 @@ public class SongServiceImpl implements ISongService {
 
         SongVo returnVo = new ModelMapper().map(songEntity, SongVo.class);
 
-        AlbumEntity album = iAlbumRepository.findById(songEntity.getAlbum().getId()).orElseThrow();
+        AlbumEntity album = iAlbumRepository.findById(songEntity.getAlbumEntity().getId()).orElseThrow();
         returnVo.setAlbumName(album.getTitle());
         if(songEntity.isFormal()) {
             ArtistEntity artist = iArtistRepository.findById(songEntity.getArtist().getId()).orElseThrow();

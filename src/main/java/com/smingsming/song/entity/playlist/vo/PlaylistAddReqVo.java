@@ -9,5 +9,6 @@ public class PlaylistAddReqVo {
 
     private String title;
     private Long userId;
+    private String playlistThumbnail;
 
 }

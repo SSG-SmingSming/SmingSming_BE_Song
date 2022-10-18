@@ -13,21 +13,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/song-server/playlist/likes")
+@RequestMapping("playlist/likes")
 @RequiredArgsConstructor
 public class PlaylistLikesController {
 
     private final IPlaylistLikesService iPlaylistLikesService;
 
-    // 플레이리스트 좋아요 추가
+    // 플레이리스트 좋아요 추가, 한 번 더 실행 시 취소
     @PostMapping(value = "/add")
     public ResponseEntity<?> addPlaylistLikes(@RequestBody PlaylistLikesAddReqVo playlistLikesAddReqVo) {
-        PlaylistLikesEntity playlistLikesEntity  = iPlaylistLikesService.addPlaylistLikes(playlistLikesAddReqVo);
 
-        if(playlistLikesEntity != null)
-            return ResponseEntity.status(HttpStatus.OK).body(playlistLikesEntity);
-        else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("다시 시도해주세요.");
+        String playlistLikes = iPlaylistLikesService.addPlaylistLikes(playlistLikesAddReqVo);
+
+        return ResponseEntity.status(HttpStatus.OK).body(playlistLikes);
     }
 
 
@@ -44,8 +42,8 @@ public class PlaylistLikesController {
 
     // 플레이리스트 좋아요 취소
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<?> deletePlaylistLikes(@RequestBody PlaylistLikesDeleteReqVo playlistLikesDeleteReqVo) {
-        boolean result = iPlaylistLikesService.deletePlaylistLikes(playlistLikesDeleteReqVo);
+    public ResponseEntity<?> deletePlaylistLikes(@RequestBody PlaylistLikesDeleteReqVo playlistLikesDeleteRequestVo) {
+        boolean result = iPlaylistLikesService.deletePlaylistLikes(playlistLikesDeleteRequestVo);
 
         if(result)
             return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
