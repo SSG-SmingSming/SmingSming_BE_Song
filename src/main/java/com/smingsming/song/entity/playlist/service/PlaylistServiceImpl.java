@@ -3,8 +3,6 @@ package com.smingsming.song.entity.playlist.service;
 import com.smingsming.song.entity.playlist.entity.PlaylistEntity;
 import com.smingsming.song.entity.playlist.repository.IPlaylistRepository;
 import com.smingsming.song.entity.playlist.vo.PlaylistAddReqVo;
-import com.smingsming.song.global.utils.s3.FileInfoDto;
-import com.smingsming.song.global.utils.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,6 @@ import java.util.Optional;
 public class PlaylistServiceImpl implements IPlaylistService{
 
     private final IPlaylistRepository iPlaylistRepository;
-    private final S3UploadService s3UploadService;
 
     // 플레이리스트 생성
     @Override
@@ -26,11 +23,8 @@ public class PlaylistServiceImpl implements IPlaylistService{
 
         ModelMapper mapper = new ModelMapper();
 
-        FileInfoDto fileInfoDto = FileInfoDto.multipartOf(playlistThumbnail, "playlist");
-        String uri = s3UploadService.store(fileInfoDto, playlistThumbnail);
-
         PlaylistEntity mapPlaylistEntity = mapper.map(playlistAddReqVo, PlaylistEntity.class);
-        mapPlaylistEntity.setPlaylistThumbnail(uri);
+        mapPlaylistEntity.setPlaylistThumbnail("");
 
         PlaylistEntity playlistEntity = iPlaylistRepository.save(mapPlaylistEntity);
 

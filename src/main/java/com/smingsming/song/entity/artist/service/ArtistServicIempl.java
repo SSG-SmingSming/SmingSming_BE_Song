@@ -3,8 +3,6 @@ package com.smingsming.song.entity.artist.service;
 import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import com.smingsming.song.entity.artist.repository.IArtistRepository;
-import com.smingsming.song.global.utils.s3.FileInfoDto;
-import com.smingsming.song.global.utils.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,19 +16,14 @@ import java.util.Optional;
 public class ArtistServicIempl implements IArtistService{
 
     private final IArtistRepository iArtistRepository;
-    private final S3UploadService s3UploadService;
 
     // 아티스트 등록
     @Override
-    public ArtistEntity addArtist(ArtistAddReqVo artistDto, MultipartFile artistThumbnail) {
+    public ArtistEntity addArtist(ArtistAddReqVo artistVo) {
 
         ModelMapper mapper = new ModelMapper();
 
-        FileInfoDto fileInfoDto = FileInfoDto.multipartOf(artistThumbnail, "artist");
-        String uri = s3UploadService.store(fileInfoDto, artistThumbnail);
-
-        ArtistEntity mapArtistEntity = mapper.map(artistDto, ArtistEntity.class);
-        mapArtistEntity.setArtistThumbnail(uri);
+        ArtistEntity mapArtistEntity = mapper.map(artistVo, ArtistEntity.class);
 
         ArtistEntity artistEntity = iArtistRepository.save(mapArtistEntity);
 
@@ -54,14 +47,11 @@ public class ArtistServicIempl implements IArtistService{
     // 아티스트 정보수정
     @Override
     @Transactional
-    public boolean updateArtist(Long artistId, MultipartFile artistThumbnail) {
+    public boolean updateArtist(Long artistId, String artistThumbUri) {
 
         ArtistEntity artistEntity = iArtistRepository.findById(artistId).orElseThrow();
 
-        FileInfoDto fileInfoDto = FileInfoDto.multipartOf(artistThumbnail, "artist");
-        String uri = s3UploadService.store(fileInfoDto, artistThumbnail);
-
-        artistEntity.updateThumbnail(uri);
+        artistEntity.updateThumbnail(artistThumbUri);
 
         return true;
     }

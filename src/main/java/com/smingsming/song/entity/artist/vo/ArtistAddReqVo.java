@@ -10,4 +10,5 @@ import java.time.LocalDate;
 public class ArtistAddReqVo {
     private String name;
     private LocalDate debutDate;
+    private String artistThumbnail;
 }

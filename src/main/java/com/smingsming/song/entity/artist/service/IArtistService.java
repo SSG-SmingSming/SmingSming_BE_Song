@@ -5,8 +5,8 @@ import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface IArtistService {
-    ArtistEntity addArtist(ArtistAddReqVo artistDto, MultipartFile artistThumbnail);
-    boolean updateArtist(Long artistId, MultipartFile artistThumbnail);
+    ArtistEntity addArtist(ArtistAddReqVo artistVo);
+    boolean updateArtist(Long artistId, String artistThumbUri);
     boolean deleteArtist(Long artistId);
     ArtistEntity getArtist(Long artistId);
 }

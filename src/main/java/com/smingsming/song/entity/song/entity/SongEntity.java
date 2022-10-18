@@ -1,8 +1,8 @@
 package com.smingsming.song.entity.song.entity;
 
 
-import com.smingsming.song.entity.album.entity.Album;
-import com.smingsming.song.entity.artist.entity.Artist;
+import com.smingsming.song.entity.album.entity.AlbumEntity;
+import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,9 +32,9 @@ public class SongEntity {
 
     private String songUri;
 
-    @ManyToOne
-    private Album album;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private AlbumEntity album;
 
-    @ManyToOne
-    private Artist artist;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ArtistEntity artist;
 }
