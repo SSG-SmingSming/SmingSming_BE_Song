@@ -11,10 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/song-server/playlist")
+@RequestMapping("/playlist")
 @RequiredArgsConstructor
 public class PlaylistController {
 
@@ -23,8 +24,8 @@ public class PlaylistController {
     // 플레이리스트 생성
 
     @PostMapping(value = "/add")
-    public ResponseEntity<?> addPlaylist(@RequestBody PlaylistAddReqVo playlistAddReqVo) {
-        PlaylistEntity playlistEntity = iPlaylistService.addPlaylist(playlistAddReqVo);
+    public ResponseEntity<?> addPlaylist(@RequestBody PlaylistAddReqVo playlistAddReqVo, HttpServletRequest request) {
+        PlaylistEntity playlistEntity = iPlaylistService.addPlaylist(playlistAddReqVo, request);
 
         if(playlistEntity != null)
             return ResponseEntity.status(HttpStatus.OK).body(playlistEntity);

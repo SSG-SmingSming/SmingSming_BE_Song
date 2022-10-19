@@ -9,11 +9,13 @@ import com.smingsming.song.entity.song.repository.ISongRepository;
 import com.smingsming.song.entity.song.vo.SongLikesAddReqVo;
 import com.smingsming.song.entity.song.vo.SongLikesDeleteReqVo;
 import com.smingsming.song.entity.song.vo.SongLikesResVo;
+import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,18 +27,20 @@ public class SongLikesServiceImpl implements ISongLikesService{
 
     private final ISongRepository iSongRepository;
     private final ISongLikesRepository iSongLikesRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 음원 좋아요 추가, 한 번 더 실행 시 취소
     @Override
-    public String addSongLikes(SongLikesAddReqVo songLikesAddReqVo) {
+    public String addSongLikes(Long songId, HttpServletRequest request) {
+        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
 
-        SongEntity song = iSongRepository.getById(songLikesAddReqVo.getSongEntityId());
-        SongLikesEntity songLikes = iSongLikesRepository.findByUserIdAndSongEntityId(songLikesAddReqVo.getUserId(), songLikesAddReqVo.getSongEntityId());
+        SongEntity song = iSongRepository.getById(songId);
+        SongLikesEntity songLikes = iSongLikesRepository.findByUserIdAndSongEntityId(userId, song.getId());
 
         if(songLikes == null) {
 
             SongLikesEntity songLikesEntity = SongLikesEntity.builder()
-                    .userId(songLikesAddReqVo.getUserId())
+                    .userId(userId)
                     .songEntity(song).build();
 
             iSongLikesRepository.save(songLikesEntity);

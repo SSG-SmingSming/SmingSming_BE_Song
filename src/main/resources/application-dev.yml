@@ -13,7 +13,7 @@ spring:
         format_sql: 'true'
     hibernate:
       ddl-auto: update
-    show-sql: 'false'
+    show-sql: true
   # 컨피그 서버 설정
   cloud:
     config:

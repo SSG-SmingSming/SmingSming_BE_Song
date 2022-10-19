@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -22,10 +23,11 @@ public class SongLikesController {
     private final ISongLikesRepository iSongLikesRepository;
 
     // 음원 좋아요 추가, 한 번 더 실행 시 취소
-    @PostMapping("/add")
-    public ResponseEntity<?> addSongLikes(@RequestBody SongLikesAddReqVo songLikesAddReqVo) {
+    @PostMapping("/add/{songId}")
+    public ResponseEntity<?> addSongLikes(@PathVariable(value = "songId") Long songId,
+                                          HttpServletRequest request) {
 
-        String songLikes = iSongLikesService.addSongLikes(songLikesAddReqVo);
+        String songLikes = iSongLikesService.addSongLikes(songId, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(songLikes);
 

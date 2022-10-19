@@ -4,13 +4,14 @@ import com.smingsming.song.entity.playlist.entity.PlaylistEntity;
 import com.smingsming.song.entity.playlist.entity.PlaylistLikesEntity;
 import com.smingsming.song.entity.playlist.repository.IPlaylistLikesRepository;
 import com.smingsming.song.entity.playlist.repository.IPlaylistRepository;
-import com.smingsming.song.entity.playlist.vo.PlaylistLikesAddReqVo;
 import com.smingsming.song.entity.playlist.vo.PlaylistLikesDeleteReqVo;
 import com.smingsming.song.entity.playlist.vo.PlaylistLikesResVo;
+import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,18 +22,21 @@ public class PlaylistLikesServiceImpl implements IPlaylistLikesService{
 
     private final IPlaylistLikesRepository iPlaylistLikesRepository;
     private final IPlaylistRepository iPlaylistRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
 
     // 플레이리스트 좋아요 추가, 한 번 더 실행 시 취소
     @Override
-    public String addPlaylistLikes(PlaylistLikesAddReqVo playlistLikesAddReqVo) {
+    public String addPlaylistLikes(Long  playlistId, HttpServletRequest request) {
 
-        PlaylistEntity playlistEntity = iPlaylistRepository.getById(playlistLikesAddReqVo.getPlaylistEntityId());
-        PlaylistLikesEntity playlistLikes = iPlaylistLikesRepository.findByUserIdAndPlaylistEntityId(playlistLikesAddReqVo.getUserId(), playlistLikesAddReqVo.getPlaylistEntityId());
+        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+
+        PlaylistEntity playlistEntity = iPlaylistRepository.findById(playlistId).orElseThrow();
+        PlaylistLikesEntity playlistLikes = iPlaylistLikesRepository.findByUserIdAndPlaylistEntityId(userId, playlistEntity.getId());
 
         if (playlistLikes == null) {
             PlaylistLikesEntity addLikes = PlaylistLikesEntity.builder()
-                    .userId(playlistLikesAddReqVo.getUserId())
+                    .userId(userId)
                     .playlistEntity(playlistEntity).build();
 
             iPlaylistLikesRepository.save(addLikes);
