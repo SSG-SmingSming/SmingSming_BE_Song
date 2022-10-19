@@ -14,6 +14,6 @@ public interface IPlaylistService {
     List<PlaylistEntity> getPlaylist(Long userId);
     PlaylistEntity editPlaylist(PlaylistUpdateReqVo playlistUpdateReqVo);
     boolean deletePlaylist(Long playlistId);
-    Integer addTrack(PlaylistTrackEntity playlistTrackEntity);
+    String addTrack(PlaylistTrackEntity playlistTrackEntity);
 
 }

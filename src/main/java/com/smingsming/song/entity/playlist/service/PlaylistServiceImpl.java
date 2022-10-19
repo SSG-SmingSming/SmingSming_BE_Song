@@ -5,6 +5,7 @@ import com.smingsming.song.entity.album.repository.IAlbumRepository;
 import com.smingsming.song.entity.playlist.entity.PlaylistEntity;
 import com.smingsming.song.entity.playlist.entity.PlaylistTrackEntity;
 import com.smingsming.song.entity.playlist.repository.IPlaylistRepository;
+import com.smingsming.song.entity.playlist.repository.IPlaylistTrackRepository;
 import com.smingsming.song.entity.playlist.vo.PlaylistAddReqVo;
 import com.smingsming.song.entity.playlist.vo.PlaylistAddReqVo;
 import com.smingsming.song.entity.playlist.vo.PlaylistUpdateReqVo;
@@ -15,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +28,7 @@ public class PlaylistServiceImpl implements IPlaylistService {
     private final ISongRepository iSongRepository;
     private final IAlbumRepository iAlbumRepository;
     private final IPlaylistRepository iPlaylistRepository;
+    private final IPlaylistTrackRepository iPlaylistTrackRepository;
 
 
     // 플레이리스트 생성
@@ -91,16 +94,36 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     // 플레이리스트 내 수록곡 추가
     @Override
-    public Integer addTrack(PlaylistTrackEntity playlistTrackEntity) {
+    @Transactional
+    public String addTrack(PlaylistTrackEntity playlistTrackEntity) {
 
-        Optional<PlaylistEntity> playlist = iPlaylistRepository.findById(playlistTrackEntity.getPlaylistId());
+        SongEntity songEntity = iSongRepository.getById(playlistTrackEntity.getSongEntity().getId());
+        PlaylistEntity playlist = iPlaylistRepository.getById(playlistTrackEntity.getPlaylistEntity().getId());
 
-        if (!playlist.isPresent()) {
+//        Optional<PlaylistEntity> playlist = iPlaylistRepository.findById(playlistTrackEntity.getPlaylistEntity().getId());
+//        Optional<AlbumEntity> albumEntity = iAlbumRepository.findById(playlistTrackEntity.getAlbumEntity().getId());
+
+        if (playlist == null) {
             throw new IllegalStateException("플레이리스트가 존재하지 않습니다.");
         }
 
+        if(songEntity == null) {
+            throw new IllegalStateException("음원이 존재하지 않습니다.");
+        }
 
-        return null;
+        if(playlistTrackEntity == null) {
+            PlaylistTrackEntity addTrack = PlaylistTrackEntity.builder()
+                    .id(playlistTrackEntity.getId())
+                    .songEntity(playlistTrackEntity.getSongEntity())
+                    .playlistEntity(playlistTrackEntity.getPlaylistEntity()).build();
 
+            iPlaylistTrackRepository.save(addTrack);
+            return "플레이리스트에 선택된 곡이 담겼습니다.";
+
+        }
+
+        else {
+            return "플레이리스트에 추가되지 않았습니다.";
+        }
     }
 }
