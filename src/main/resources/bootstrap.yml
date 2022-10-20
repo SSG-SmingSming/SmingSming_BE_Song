@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk
-ARG JAR_FILE=build/libs/song-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+spring:
+  cloud:
+    config:
+      uri: http://3.35.94.116:8888
