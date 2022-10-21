@@ -3,12 +3,15 @@ package com.smingsming.song.entity.artist.contoller;
 import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import com.smingsming.song.entity.artist.service.IArtistService;
+import com.smingsming.song.entity.artist.vo.ArtistVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/artist")
@@ -34,6 +37,14 @@ public class ArtistController {
             return ResponseEntity.status(HttpStatus.OK).body(result);
         else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("없는 아티스트 번호입니다.");
+    }
+
+    @GetMapping(value = "/search")
+    public ResponseEntity<?> artistSearch(@RequestParam(name = "keyword",defaultValue = "") String keyword,
+                                          @RequestParam(name = "page", defaultValue = "1") int page) {
+        List<ArtistVo> result = iArtistService.artistSearch(keyword, page);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @PutMapping(value = "/update/{artistId}/{artistThumbUri}")

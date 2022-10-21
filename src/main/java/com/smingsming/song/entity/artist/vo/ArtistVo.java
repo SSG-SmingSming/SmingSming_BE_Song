@@ -6,5 +6,5 @@ import lombok.Data;
 public class ArtistVo {
     private Long id;
     private String name;
-    private String artistThumbnail;
+    private String thumbnail;
 }
