@@ -11,6 +11,5 @@ public class FormalSongAddReqVo {
     private Long album;
     private Long artist;
     private String songUri;
-    private String songThumbUri;
     private String songName;
 }

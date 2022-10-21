@@ -11,4 +11,5 @@ public class AlbumAddRequestVo {
     private String title;
     private LocalDate releaseDate;
     private String albumThumbnail;
+    private Long artistId;
 }

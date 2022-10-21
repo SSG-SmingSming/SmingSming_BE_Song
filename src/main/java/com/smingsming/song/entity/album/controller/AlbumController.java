@@ -3,12 +3,15 @@ package com.smingsming.song.entity.album.controller;
 import com.smingsming.song.entity.album.entity.AlbumEntity;
 import com.smingsming.song.entity.album.vo.AlbumAddRequestVo;
 import com.smingsming.song.entity.album.service.IAlbumService;
+import com.smingsming.song.entity.album.vo.AlbumVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/album")
@@ -21,14 +24,25 @@ public class AlbumController {
         AlbumEntity result = iAlbumService.addAlbum(albumVo);
 
         if(result != null)
-            return ResponseEntity.status(HttpStatus.OK).body(result);
+            return ResponseEntity.status(HttpStatus.OK).body(true);
         else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("추가 실패");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
     }
 
     @GetMapping(value = "/get/{albumId}")
     public ResponseEntity<?> getAlbum(@PathVariable(value = "albumId") Long albumId) {
         AlbumEntity result = iAlbumService.getAlbum(albumId);
+
+        if(result != null)
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("없는 앨범ID 입니다.");
+    }
+
+    @GetMapping(value = "/search")
+    public ResponseEntity<?> searchAlbum(@RequestParam(name = "keyword", defaultValue = "") String keyword,
+                                         @RequestParam(name = "page", defaultValue = "1") int page) {
+        List<AlbumVo> result = iAlbumService.albumSearch(keyword, page);
 
         if(result != null)
             return ResponseEntity.status(HttpStatus.OK).body(result);

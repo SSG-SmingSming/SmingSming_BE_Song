@@ -21,8 +21,6 @@ public class SongEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String songThumbUri;
-
     private String songName;
 
     @Column(name = "is_formal")
@@ -33,6 +31,7 @@ public class SongEntity {
     private String songUri;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "album_id")
     private AlbumEntity albumEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)

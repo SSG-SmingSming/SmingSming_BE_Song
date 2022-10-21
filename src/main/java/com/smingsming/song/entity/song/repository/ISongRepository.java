@@ -12,7 +12,7 @@ import java.util.List;
 public interface ISongRepository extends JpaRepository<SongEntity, Long> {
 
     @Query(value = "select new com.smingsming.song.entity.song.vo.SongVo(" +
-            " s.id, s.songThumbUri, s.songName, artist.name, album.title, s.songUri, s.formal,s.userId " +
+            " s.id, s.albumEntity.albumThumbnail, s.songName, artist.name, album.title, s.songUri, s.formal,s.userId " +
             ")" +
             " from SongEntity s" +
             " left join AlbumEntity album on s.albumEntity.id = album.id " +

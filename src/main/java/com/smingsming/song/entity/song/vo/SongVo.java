@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class SongVo {
     private Long id;
-    private String songThumbUri;
+    private String thumbUri;
     private String songName;
     private String artistName;
     private String albumName;
@@ -14,9 +14,9 @@ public class SongVo {
     private boolean formal;
     private Long userId;
 
-    public SongVo(Long id, String songThumbUri, String songName, String artistName, String albumName, String songUri, boolean formal, Long userId) {
+    public SongVo(Long id, String thumbUri, String songName, String artistName, String albumName, String songUri, boolean formal, Long userId) {
         this.id = id;
-        this.songThumbUri = songThumbUri;
+        this.thumbUri = thumbUri;
         this.songName = songName;
         this.artistName = artistName;
         this.albumName = albumName;
