@@ -1,5 +1,6 @@
 package com.smingsming.song.entity.artist.contoller;
 
+import com.smingsming.song.entity.album.vo.AlbumVo;
 import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import com.smingsming.song.entity.artist.service.IArtistService;
@@ -43,6 +44,14 @@ public class ArtistController {
     public ResponseEntity<?> artistSearch(@RequestParam(name = "keyword",defaultValue = "") String keyword,
                                           @RequestParam(name = "page", defaultValue = "1") int page) {
         List<ArtistVo> result = iArtistService.artistSearch(keyword, page);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @GetMapping(value = "/get/album/{artistId}")
+    public ResponseEntity<?> getArtistAlbum(@PathVariable(name = "artistId") Long artistId,
+                                            @RequestParam(name = "page", defaultValue = "1") int page) {
+        List<AlbumVo> result = iArtistService.getAlbumByArtist(artistId, page);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

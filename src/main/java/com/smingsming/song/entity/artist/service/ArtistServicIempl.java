@@ -1,5 +1,8 @@
 package com.smingsming.song.entity.artist.service;
 
+import com.smingsming.song.entity.album.entity.AlbumEntity;
+import com.smingsming.song.entity.album.repository.IAlbumRepository;
+import com.smingsming.song.entity.album.vo.AlbumVo;
 import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import com.smingsming.song.entity.artist.repository.IArtistRepository;
@@ -23,7 +26,7 @@ import java.util.Optional;
 public class ArtistServicIempl implements IArtistService{
 
     private final IArtistRepository iArtistRepository;
-
+    private final IAlbumRepository iAlbumRepository;
     // 아티스트 등록
     @Override
     public ArtistEntity addArtist(ArtistAddReqVo artistVo) {
@@ -49,6 +52,31 @@ public class ArtistServicIempl implements IArtistService{
             return artist.get();
         else
             return null;
+    }
+
+    // 아티스트별 앨범 조회
+    @Override
+    public List<AlbumVo> getAlbumByArtist(Long artistId, int page) {
+
+        Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
+
+        ModelMapper mapper = new ModelMapper();
+
+        List<AlbumEntity> albumList = iAlbumRepository.findAllByArtist_Id(pr, artistId);
+
+        List<AlbumVo> returnVo = new ArrayList<>();
+
+        albumList.forEach(v -> {
+            returnVo.add(AlbumVo.builder()
+                            .id(v.getId())
+                            .name(v.getTitle())
+                            .thumbnail(v.getAlbumThumbnail())
+                            .artistId(v.getArtist().getId())
+                            .artistName(v.getArtist().getName())
+                    .build());
+        });
+
+        return returnVo;
     }
 
     // 아티스트 검색

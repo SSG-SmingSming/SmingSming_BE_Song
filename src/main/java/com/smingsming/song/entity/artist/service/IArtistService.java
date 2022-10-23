@@ -1,5 +1,6 @@
 package com.smingsming.song.entity.artist.service;
 
+import com.smingsming.song.entity.album.vo.AlbumVo;
 import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import com.smingsming.song.entity.artist.vo.ArtistVo;
@@ -14,4 +15,5 @@ public interface IArtistService {
     boolean deleteArtist(Long artistId);
     ArtistEntity getArtist(Long artistId);
     List<ArtistVo> artistSearch(String keyWord, int page);
+    List<AlbumVo> getAlbumByArtist(Long artistId, int page);
 }
