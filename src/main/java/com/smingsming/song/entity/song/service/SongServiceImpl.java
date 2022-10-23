@@ -110,18 +110,46 @@ public class SongServiceImpl implements ISongService {
         return false;
     }
 
+//    @Override
+//    public SongVo songPlay(Long id) {
+//        SongEntity songEntity = iSongRepository.findById(id).orElseThrow();
+//
+//        SongVo returnVo = new ModelMapper().map(songEntity, SongVo.class);
+//
+//        AlbumEntity album = iAlbumRepository.findById(songEntity.getAlbumEntity().getId()).orElseThrow();
+//        returnVo.setAlbumName(album.getTitle());
+//        if(songEntity.isFormal()) {
+//            ArtistEntity artist = iArtistRepository.findById(songEntity.getArtist().getId()).orElseThrow();
+//
+//            returnVo.setArtistName(artist.getName());
+//        }else {
+//            UserVo user = userServiceClient.getUser(songEntity.getUserId());
+//            returnVo.setArtistName(user.getNickName());
+//        }
+//
+//        return returnVo;
+//    }
+
     @Override
-    public SongVo songPlay(Long id) {
+    public SongGetVo songPlay(Long id) {
         SongEntity songEntity = iSongRepository.findById(id).orElseThrow();
 
-        SongVo returnVo = new ModelMapper().map(songEntity, SongVo.class);
+//        SongGetVo returnVo = new ModelMapper().map(songEntity, SongGetVo.class);
+
 
         AlbumEntity album = iAlbumRepository.findById(songEntity.getAlbumEntity().getId()).orElseThrow();
-        returnVo.setAlbumName(album.getTitle());
-        if(songEntity.isFormal()) {
-            ArtistEntity artist = iArtistRepository.findById(songEntity.getArtist().getId()).orElseThrow();
 
-            returnVo.setArtistName(artist.getName());
+
+        SongGetVo returnVo = SongGetVo.builder()
+                .id(songEntity.getId())
+                .albumId(songEntity.getAlbumEntity().getId())
+                .thumbnail(songEntity.getAlbumEntity().getAlbumThumbnail())
+                .songUri(songEntity.getSongUri())
+                .name(songEntity.getSongName())
+                .build();
+
+        if(songEntity.isFormal()) {
+            returnVo.setArtistName(songEntity.getArtist().getName());
         }else {
             UserVo user = userServiceClient.getUser(songEntity.getUserId());
             returnVo.setArtistName(user.getNickName());
@@ -131,14 +159,16 @@ public class SongServiceImpl implements ISongService {
     }
 
     @Override
-    public List<SongVo> songSearch(String keyword, int page) {
+    public List<SongGetVo> songSearch(String keyword, int page, HttpServletRequest request) {
 
-        List<SongVo> songList = new ArrayList<>();
+        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+
+        List<SongGetVo> songList = new ArrayList<>();
         Pageable pr = PageRequest.of(page - 1 , 20, Sort.by("id").descending());
 
         keyword = "%" + keyword + "%";
 
-        songList = iSongRepository.getSongListByKeyword(pr, keyword);
+        songList = iSongRepository.getSongListByKeyword(pr, keyword, userId);
 
         return songList;
     }

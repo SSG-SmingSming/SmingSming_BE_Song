@@ -17,7 +17,6 @@ spring:
   # 컨피그 서버 설정
   cloud:
     config:
-      uri: ${gateway-server}
       name: song-server
       profile: docker
 
