@@ -55,4 +55,16 @@ public interface ISongRepository extends JpaRepository<SongEntity, Long> {
     )
     List<SongGetVo> findAllByAlbumEntityId(@Param("userId") Long userId, @Param("albumId") Long albumId);
 
+    @Query(value = "select new com.smingsming.song.entity.song.vo.SongGetVo( " +
+            " s.id, album.id, artist.name, album.albumThumbnail, " +
+            " s.songName, s.songUri, " +
+            " case when sl.id is not null then true else false end" +
+            ") " +
+            " from SongEntity s" +
+            " left join AlbumEntity album on s.albumEntity.id = album.id " +
+            " left join ArtistEntity artist on s.artist.id = artist.id " +
+            " left join SongLikesEntity sl on s.id = sl.songEntity.id and sl.userId = :userId " +
+            " where s.artist.id = :artistId "
+    )
+    List<SongGetVo> findAllByArtistId(@Param("userId") Long userId, @Param("artistId") Long artistId);
 }
