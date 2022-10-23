@@ -3,6 +3,7 @@ package com.smingsming.song.entity.song.controller;
 import com.smingsming.song.entity.song.service.ISongService;
 import com.smingsming.song.entity.song.vo.CustomSongAddReqVo;
 import com.smingsming.song.entity.song.vo.FormalSongAddReqVo;
+import com.smingsming.song.entity.song.vo.SongGetVo;
 import com.smingsming.song.entity.song.vo.SongVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,16 +49,17 @@ public class SongController {
     }
 
     @GetMapping("/play/{songId}")
-    public ResponseEntity<?> songGet(@PathVariable(value = "songId")Long songId) {
-        SongVo result = iSongService.songPlay(songId);
+    public ResponseEntity<?> songGet(@PathVariable Long songId) {
+        SongGetVo result = iSongService.songPlay(songId);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping("/search")
     public ResponseEntity<?> songSearch(@RequestParam(defaultValue = "") String keyword,
-                                        @RequestParam(name = "page", defaultValue = "1") int page) {
-        List<SongVo> result = iSongService.songSearch(keyword, page);
+                                        @RequestParam(name = "page", defaultValue = "1") int page,
+                                        HttpServletRequest request) {
+        List<SongGetVo> result = iSongService.songSearch(keyword, page, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

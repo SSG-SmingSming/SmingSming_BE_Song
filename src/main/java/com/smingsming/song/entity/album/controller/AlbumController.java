@@ -3,7 +3,9 @@ package com.smingsming.song.entity.album.controller;
 import com.smingsming.song.entity.album.entity.AlbumEntity;
 import com.smingsming.song.entity.album.vo.AlbumAddRequestVo;
 import com.smingsming.song.entity.album.service.IAlbumService;
+import com.smingsming.song.entity.album.vo.AlbumDetailVo;
 import com.smingsming.song.entity.album.vo.AlbumVo;
+import com.smingsming.song.entity.song.vo.SongGetVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -48,6 +51,14 @@ public class AlbumController {
             return ResponseEntity.status(HttpStatus.OK).body(result);
         else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("없는 앨범ID 입니다.");
+    }
+
+    @GetMapping(value = "/get/detail/{albumId}")
+    public ResponseEntity<?> getAlbumDetail(@PathVariable(name = "albumId") Long albumId,
+                                            HttpServletRequest request) {
+        AlbumDetailVo result = iAlbumService.getAlbumDetail(albumId, request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @DeleteMapping(value = "/delete/{albumId}")
