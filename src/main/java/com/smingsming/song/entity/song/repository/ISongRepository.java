@@ -2,7 +2,6 @@ package com.smingsming.song.entity.song.repository;
 
 import com.smingsming.song.entity.song.entity.SongEntity;
 import com.smingsming.song.entity.song.vo.SongGetVo;
-import com.smingsming.song.entity.song.vo.SongVo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -40,7 +39,7 @@ public interface ISongRepository extends JpaRepository<SongEntity, Long> {
     )
     List<SongGetVo> getSongListByKeyword(Pageable pr, @Param("keyword") String keyword, @Param("userId") Long userId);
 
-    List<SongEntity> findAllByAlbumEntityId(Long id);
+//    List<SongEntity> findAllByAlbumEntityId(Long id);
 
 
     @Query(value = "select new com.smingsming.song.entity.song.vo.SongGetVo( " +
@@ -54,6 +53,6 @@ public interface ISongRepository extends JpaRepository<SongEntity, Long> {
             " left join SongLikesEntity sl on s.id = sl.songEntity.id and sl.userId = :userId " +
             " where s.albumEntity.id = :albumId "
     )
-    List<SongGetVo> findAllByAlbumEntityId2(@Param("userId") Long userId, @Param("albumId") Long albumId);
+    List<SongGetVo> findAllByAlbumEntityId(@Param("userId") Long userId, @Param("albumId") Long albumId);
 
 }
