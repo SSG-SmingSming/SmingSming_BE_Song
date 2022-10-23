@@ -51,7 +51,7 @@ public class ArtistServicIempl implements IArtistService{
             return null;
     }
 
-
+    // 아티스트 검색
     @Override
     public List<ArtistVo> artistSearch(String keyword, int page) {
 

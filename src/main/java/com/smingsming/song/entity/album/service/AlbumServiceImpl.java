@@ -7,7 +7,6 @@ import com.smingsming.song.entity.album.vo.AlbumDetailVo;
 import com.smingsming.song.entity.album.vo.AlbumVo;
 import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.repository.IArtistRepository;
-import com.smingsming.song.entity.song.entity.SongEntity;
 import com.smingsming.song.entity.song.repository.ISongRepository;
 import com.smingsming.song.entity.song.vo.SongGetVo;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -98,7 +96,7 @@ public class AlbumServiceImpl implements IAlbumService{
 
         AlbumEntity album = iAlbumRepository.findById(albumId).orElseThrow();
 
-        List<SongGetVo> songList = iSongRepository.findAllByAlbumEntityId2(userId, albumId);
+        List<SongGetVo> songList = iSongRepository.findAllByAlbumEntityId(userId, albumId);
 
         AlbumDetailVo returnVo = AlbumDetailVo.builder()
                 .albumId(album.getId())

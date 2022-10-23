@@ -1,10 +1,7 @@
 package com.smingsming.song.entity.song.controller;
 
 import com.smingsming.song.entity.song.service.ISongService;
-import com.smingsming.song.entity.song.vo.CustomSongAddReqVo;
-import com.smingsming.song.entity.song.vo.FormalSongAddReqVo;
-import com.smingsming.song.entity.song.vo.SongGetVo;
-import com.smingsming.song.entity.song.vo.SongVo;
+import com.smingsming.song.entity.song.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -28,6 +25,7 @@ public class SongController {
                 env.getProperty("local.server.port"));
     }
 
+    // 정식음원 추가
     @PostMapping("/add/formal")
     public ResponseEntity<?> formalSongAdd(@RequestBody FormalSongAddReqVo requestVo) {
         boolean result = iSongService.formalSongAdd(requestVo);
@@ -38,6 +36,7 @@ public class SongController {
             return ResponseEntity.status(HttpStatus.OK).body(false);
     }
 
+    // 미정식음원 추가
     @PostMapping("/add/custom")
     public ResponseEntity<?> customSongAdd(@RequestBody CustomSongAddReqVo requestVo, HttpServletRequest request) {
         boolean result = iSongService.customSongAdd(requestVo, request);
@@ -48,6 +47,7 @@ public class SongController {
             return ResponseEntity.status(HttpStatus.OK).body(false);
     }
 
+    // 재생정보 조회
     @GetMapping("/play/{songId}")
     public ResponseEntity<?> songGet(@PathVariable Long songId) {
         SongGetVo result = iSongService.songPlay(songId);
@@ -55,6 +55,7 @@ public class SongController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    // 음악 검색
     @GetMapping("/search")
     public ResponseEntity<?> songSearch(@RequestParam(defaultValue = "") String keyword,
                                         @RequestParam(name = "page", defaultValue = "1") int page,
@@ -64,7 +65,17 @@ public class SongController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    // 음악 검색
+    @GetMapping("/total/search")
+    public ResponseEntity<?> totalSearch(@RequestParam(defaultValue = "") String keyword,
+                                        @RequestParam(name = "page", defaultValue = "1") int page,
+                                        HttpServletRequest request) {
+        SearchResultVo result = iSongService.totalSearch(keyword, page, request);
 
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    // 정식음원 삭제
     @DeleteMapping("/delete/{songId}")
     public ResponseEntity<?> songDelete(@PathVariable(value = "songId")Long songId) {
         boolean result = iSongService.songDelete(songId);
@@ -75,6 +86,7 @@ public class SongController {
             return ResponseEntity.status(HttpStatus.OK).body(false);
     }
 
+    // 비정식음원 삭제
     @DeleteMapping("/delete/custom/{songId}")
     public ResponseEntity<?> customSongDelete(@PathVariable(value = "songId")Long songId, HttpServletRequest request) {
         boolean result = iSongService.customSongDelete(songId, request);
