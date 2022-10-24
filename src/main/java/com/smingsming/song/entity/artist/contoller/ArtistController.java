@@ -8,10 +8,8 @@ import com.smingsming.song.entity.artist.vo.ArtistVo;
 import com.smingsming.song.entity.song.vo.SongGetVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -36,7 +34,7 @@ public class ArtistController {
     // 아티스트 정보 조회
     @GetMapping(value = "/get/{artistId}")
     public ResponseEntity<?> getArtist(@PathVariable("artistId") Long artistId) {
-        ArtistEntity result = iArtistService.getArtist(artistId);
+        ArtistVo result = iArtistService.getArtist(artistId);
 
         if (result != null)
             return ResponseEntity.status(HttpStatus.OK).body(result);
