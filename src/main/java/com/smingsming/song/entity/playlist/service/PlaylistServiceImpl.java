@@ -14,6 +14,9 @@ import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -126,6 +129,18 @@ public class PlaylistServiceImpl implements IPlaylistService {
         } else {
             return "플레이리스트에 추가되지 않았습니다.";
         }
+    }
+
+    @Override
+    public List<PlaylistVo> playlistSearch(String keyword, int page) {
+
+        Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
+
+        keyword = "%" + keyword + "%";
+
+        List<PlaylistVo> tmp = iPlaylistRepository.findAllByTitleContains(keyword, pr);
+
+        return tmp;
     }
 
     // 플레이리스트 내 수록곡 조회
