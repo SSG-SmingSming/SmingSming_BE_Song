@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface IPlaylistService {
 
-    PlaylistEntity addPlaylist(PlaylistAddReqVo playlistAddReqVo);
+    PlaylistEntity addPlaylist(PlaylistAddReqVo playlistAddReqVo, HttpServletRequest request);
     List<PlaylistEntity> getPlaylist(Long userId);
     PlaylistEntity editPlaylist(PlaylistUpdateReqVo playlistUpdateReqVo);
     boolean deletePlaylist(Long playlistId);

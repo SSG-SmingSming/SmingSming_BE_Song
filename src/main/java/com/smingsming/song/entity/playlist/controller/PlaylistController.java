@@ -24,8 +24,8 @@ public class PlaylistController {
     // 플레이리스트 생성
 
     @PostMapping(value = "/add")
-    public ResponseEntity<?> addPlaylist(@RequestBody PlaylistAddReqVo playlistAddReqVo) {
-        PlaylistEntity playlistEntity = iPlaylistService.addPlaylist(playlistAddReqVo);
+    public ResponseEntity<?> addPlaylist(@RequestBody PlaylistAddReqVo playlistAddReqVo, HttpServletRequest request) {
+        PlaylistEntity playlistEntity = iPlaylistService.addPlaylist(playlistAddReqVo, request);
 
         if(playlistEntity != null)
             return ResponseEntity.status(HttpStatus.OK).body(playlistEntity);

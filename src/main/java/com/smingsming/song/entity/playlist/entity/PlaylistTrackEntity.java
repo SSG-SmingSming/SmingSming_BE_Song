@@ -20,6 +20,9 @@ public class PlaylistTrackEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long songId;
-    private Long playlistId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private SongEntity songEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private PlaylistEntity playlistEntity;
 }

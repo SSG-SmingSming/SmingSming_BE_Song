@@ -8,7 +8,6 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class SongGetVo {
-
     private Long id;
     private Long albumId;
     private String artistName;

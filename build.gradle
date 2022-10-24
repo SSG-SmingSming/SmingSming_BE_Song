@@ -2,6 +2,30 @@ plugins {
 	id 'org.springframework.boot' version '2.6.8'
 	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
 	id 'java'
+	id 'com.google.cloud.tools.jib' version '3.3.0'
+}
+
+jib {
+	from {
+		auth {
+			username = System.getenv("DOCKER_HUB_USERNAME")
+			password = System.getenv("DOCKER_HUB_PASSWORD")
+		}
+	}
+	to {
+		image = "gpdbs2/smingsming"
+		tags = ["song"]
+		auth {
+			username = System.getenv("DOCKER_HUB_USERNAME")
+			password = System.getenv("DOCKER_HUB_PASSWORD")
+		}
+	}
+	container {
+//		volumes = ["/tmp"]
+//		environment = [
+//				"SMINGSMING_DB_USERNAME": System.getenv("SMINGSMING_DB_USERNAME"),
+//		]
+	}
 }
 
 group = 'com.smingsming'

@@ -13,6 +13,7 @@ import com.smingsming.song.entity.song.repository.ISongRepository;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,8 +28,6 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final ISongRepository iSongRepository;
-    private final IAlbumRepository iAlbumRepository;
-    private final IArtistRepository iArtistRepository;
     private final IPlaylistRepository iPlaylistRepository;
     private final IPlaylistTrackRepository iPlaylistTrackRepository;
 
@@ -36,11 +35,16 @@ public class PlaylistServiceImpl implements IPlaylistService {
     // 플레이리스트 생성
     @Override
 
-    public PlaylistEntity addPlaylist(PlaylistAddReqVo playlistAddReqVo) {
+    public PlaylistEntity addPlaylist(PlaylistAddReqVo playlistAddReqVo, HttpServletRequest request) {
+
+        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
 
         ModelMapper mapper = new ModelMapper();
 
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
         PlaylistEntity mapPlaylistEntity = mapper.map(playlistAddReqVo, PlaylistEntity.class);
+        mapPlaylistEntity.setUserId(userId);
 
         PlaylistEntity playlistEntity = iPlaylistRepository.save(mapPlaylistEntity);
 
@@ -48,7 +52,6 @@ public class PlaylistServiceImpl implements IPlaylistService {
             return playlistEntity;
         else
             return null;
-
     }
 
     // 플레이리스트 조회
@@ -128,8 +131,6 @@ public class PlaylistServiceImpl implements IPlaylistService {
         Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
         PlaylistEntity playlist = iPlaylistRepository.findById(playlistId).orElseThrow();
 
-
-//        List<PlaylistTrackEntity> trackList = iPlaylistTrackRepository.findAllByPlaylistEntityId(playlistId);
         List<PlaylistTrackEntity> trackList = iPlaylistTrackRepository.findAllByPlaylistId(playlistId);
 
         List<PlaylistTrackVo> trackVoList = new ArrayList<>();
@@ -138,12 +139,7 @@ public class PlaylistServiceImpl implements IPlaylistService {
         trackList.forEach(v -> {
             SongEntity song = iSongRepository.findById(v.getSongId()).get();
 
-//            String test = iArtistRepository.findById(v.getSongEntity().getArtist().getId()).get().getName();
             trackVoList.add(PlaylistTrackVo.builder()
-//                    .name(song.getSongName())
-//                    .thumbnail(song.getAlbumEntity().getAlbumThumbnail())
-//                    .artistName(song.getArtist().getName())
-//                    .artistName(v.getSongEntity().getArtist().getName())
                     .id(v.getId())
                     .songId(v.getSongId())
                     .playlistId(v.getPlaylistId())
