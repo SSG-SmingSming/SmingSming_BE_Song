@@ -36,11 +36,6 @@ public class PlaylistEntity {
     @NotNull
     private Long userId;
 
-//    private SongEntity songEntity;
-//
-//    private AlbumEntity albumEntity;
-
-    // 음악 넣기 !
 
     @Builder
     public PlaylistEntity(String title, String playlistThumbnail, Long userId) {
@@ -49,16 +44,11 @@ public class PlaylistEntity {
         this.userId = userId;
     }
 
+    public  void updateName(String title) { this.title = title; }
     public void updateThumbnail(String playlistThumbnail) {
         this.playlistThumbnail = playlistThumbnail;
     }
 
-//    @OneToMany(
-//            mappedBy = "playlistEntity",
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true,
-//            fetch = FetchType.LAZY)
-//    private List<PlaylistLikesEntity> playlistLikesEntityList;
 
 }
 

@@ -67,17 +67,22 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     // 플레이리스트 정보 수정
     @Override
+    @Transactional
     public PlaylistEntity editPlaylist(PlaylistUpdateReqVo playlistUpdateReqVo) {
 
-        Optional<PlaylistEntity> playlist = iPlaylistRepository.findById(playlistUpdateReqVo.getId());
+        PlaylistEntity playlist = iPlaylistRepository.findById(playlistUpdateReqVo.getId()).orElseThrow();
 
-        if (playlist.isPresent()) {
+        if (playlist != null) {
 
-            PlaylistUpdateReqVo updateReqVo = PlaylistUpdateReqVo.builder()
-                    .id(playlist.get().getId())
-                    .title(playlist.get().getTitle())
-                    .playlistThumbnail(playlistUpdateReqVo.getPlaylistThumbnail())
-                    .build();
+//            PlaylistUpdateReqVo updateReqVo = PlaylistUpdateReqVo.builder()
+//                    .id(playlist.getId())
+//                    .title(playlist.getTitle())
+//                    .playlistThumbnail(playlistUpdateReqVo.getPlaylistThumbnail())
+//                    .build();
+            playlist.updateName(playlistUpdateReqVo.getName());
+            playlist.updateThumbnail(playlistUpdateReqVo.getThumbnail());
+
+            return playlist;
         }
 
         return null;

@@ -33,6 +33,7 @@ public class ArtistServicIempl implements IArtistService{
     private final IAlbumRepository iAlbumRepository;
     private final ISongRepository iSongRepository;
     private final JwtTokenProvider jwtTokenProvider;
+
     // 아티스트 등록
     @Override
     public ArtistEntity addArtist(ArtistAddReqVo artistVo) {
