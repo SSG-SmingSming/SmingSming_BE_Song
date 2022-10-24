@@ -66,5 +66,5 @@ public interface ISongRepository extends JpaRepository<SongEntity, Long> {
             " left join SongLikesEntity sl on s.id = sl.songEntity.id and sl.userId = :userId " +
             " where s.artist.id = :artistId "
     )
-    List<SongGetVo> findAllByArtistId(@Param("userId") Long userId, @Param("artistId") Long artistId);
+    List<SongGetVo> findAllByArtistId(@Param("userId") Long userId, @Param("artistId") Long artistId, Pageable pr);
 }

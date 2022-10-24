@@ -65,7 +65,9 @@ public class SongController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    // 음악 검색
+
+
+    // 전체 검색
     @GetMapping("/total/search")
     public ResponseEntity<?> totalSearch(@RequestParam(defaultValue = "") String keyword,
                                         @RequestParam(name = "page", defaultValue = "1") int page,

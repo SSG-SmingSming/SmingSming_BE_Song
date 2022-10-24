@@ -7,7 +7,6 @@ import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import com.smingsming.song.entity.artist.repository.IArtistRepository;
 import com.smingsming.song.entity.artist.vo.ArtistVo;
-import com.smingsming.song.entity.playlist.vo.PlaylistLikesResVo;
 import com.smingsming.song.entity.song.repository.ISongRepository;
 import com.smingsming.song.entity.song.vo.SongGetVo;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -51,13 +49,12 @@ public class ArtistServicIempl implements IArtistService{
 
     // 아티스트 조회
     @Override
-    public ArtistEntity getArtist(Long artistId) {
-        Optional<ArtistEntity> artist = iArtistRepository.findById(artistId);
+    public ArtistVo getArtist(Long artistId) {
+        ArtistEntity artist = iArtistRepository.findById(artistId).orElseThrow();
 
-        if(artist.isPresent())
-            return artist.get();
-        else
-            return null;
+        ArtistVo returnVo = new ModelMapper().map(artist, ArtistVo.class);
+
+        return returnVo;
     }
 
     // 아티스트별 앨범 조회
@@ -66,7 +63,6 @@ public class ArtistServicIempl implements IArtistService{
 
         Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
 
-        ModelMapper mapper = new ModelMapper();
 
         List<AlbumEntity> albumList = iAlbumRepository.findAllByArtist_Id(pr, artistId);
 
@@ -92,7 +88,7 @@ public class ArtistServicIempl implements IArtistService{
         Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
         Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
 
-        List<SongGetVo> songList = iSongRepository.findAllByArtistId(userId, artistId);
+        List<SongGetVo> songList = iSongRepository.findAllByArtistId(userId, artistId, pr);
 
         return songList;
     }
