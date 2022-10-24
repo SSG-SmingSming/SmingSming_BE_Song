@@ -1,0 +1,31 @@
+server:
+  port: '0'
+
+spring:
+  # application 정보 설정
+  application:
+    name: song-server
+  # JPA 설정
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  # 컨피그 서버 설정
+  cloud:
+    config:
+      name: song-server
+      profile: dev
+
+# AWS EC2관련 로그 error level만 남기도록 설정
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+        internal:
+          InstanceMetadataServiceResourceFetcher: error

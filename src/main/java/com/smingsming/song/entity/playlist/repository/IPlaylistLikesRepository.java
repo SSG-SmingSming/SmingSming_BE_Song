@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface IPlaylistLikesRepository extends JpaRepository<PlaylistLikesEntity, Long> {
 
-    Optional<PlaylistLikesEntity> findByUserIdAndPlaylistEntityId(Long userId, Long playlistId);
+    PlaylistLikesEntity findByUserIdAndPlaylistEntityId(Long userId, Long playlistId);
     List<PlaylistLikesEntity> findAllByUserId(Long userId);
 }

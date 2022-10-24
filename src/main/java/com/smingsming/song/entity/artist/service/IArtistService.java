@@ -1,13 +1,12 @@
 package com.smingsming.song.entity.artist.service;
 
-import com.smingsming.song.entity.artist.entity.Artist;
-import com.smingsming.song.entity.artist.vo.ArtistAddRequestVo;
+import com.smingsming.song.entity.artist.entity.ArtistEntity;
+import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface IArtistService {
-    Artist addArtist(ArtistAddRequestVo artistDto, MultipartFile artistThumbnail);
-    boolean updateArtist(Long artistId, MultipartFile artistThumbnail);
+    ArtistEntity addArtist(ArtistAddReqVo artistVo);
+    boolean updateArtist(Long artistId, String artistThumbUri);
     boolean deleteArtist(Long artistId);
-
-    Artist getArtist(Long artistId);
+    ArtistEntity getArtist(Long artistId);
 }
