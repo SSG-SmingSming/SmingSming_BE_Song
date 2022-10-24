@@ -1,10 +1,7 @@
 package com.smingsming.song.entity.playlist.service;
 
 import com.smingsming.song.entity.playlist.entity.PlaylistEntity;
-import com.smingsming.song.entity.playlist.vo.PlaylistAddReqVo;
-import com.smingsming.song.entity.playlist.vo.PlaylistDetailVo;
-import com.smingsming.song.entity.playlist.vo.PlaylistTrackAddReqVo;
-import com.smingsming.song.entity.playlist.vo.PlaylistUpdateReqVo;
+import com.smingsming.song.entity.playlist.vo.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -18,4 +15,5 @@ public interface IPlaylistService {
     String addTrack(PlaylistTrackAddReqVo playlistTrackAddReqVo);
     PlaylistDetailVo getPlaylistTrack(Long playlistTrackId, HttpServletRequest request);
     boolean deleteTrack(Long playlistTrackId);
+    List<PlaylistVo> playlistSearch(String keyword, int page);
 }
