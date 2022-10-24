@@ -35,6 +35,6 @@ public class SongEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private AlbumEntity albumEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private ArtistEntity artist;
 }
