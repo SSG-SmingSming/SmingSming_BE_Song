@@ -2,6 +2,7 @@ package com.smingsming.song.entity.playlist.service;
 
 import com.smingsming.song.entity.playlist.vo.PlaylistLikesDeleteReqVo;
 import com.smingsming.song.entity.playlist.vo.PlaylistLikesResVo;
+import com.smingsming.song.entity.playlist.vo.PlaylistVo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -9,6 +10,6 @@ import java.util.List;
 public interface IPlaylistLikesService {
 
     String addPlaylistLikes(Long playlistId , HttpServletRequest request);
-    List<PlaylistLikesResVo> getPlaylistLikes(Long Id);
+    List<PlaylistVo> getPlaylistLikes(Long Id, HttpServletRequest request);
     boolean deletePlaylistLikes(PlaylistLikesDeleteReqVo playlistLikesDeleteReqVo);
 }

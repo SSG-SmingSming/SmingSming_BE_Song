@@ -6,6 +6,7 @@ import com.smingsming.song.entity.playlist.repository.IPlaylistLikesRepository;
 import com.smingsming.song.entity.playlist.repository.IPlaylistRepository;
 import com.smingsming.song.entity.playlist.vo.PlaylistLikesDeleteReqVo;
 import com.smingsming.song.entity.playlist.vo.PlaylistLikesResVo;
+import com.smingsming.song.entity.playlist.vo.PlaylistVo;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -52,19 +53,12 @@ public class PlaylistLikesServiceImpl implements IPlaylistLikesService{
 
     // 좋아요한 플레이리스트 조회
     @Override
-    public List<PlaylistLikesResVo> getPlaylistLikes(Long userId) {
-        Iterable<PlaylistLikesEntity> playlistLikes = iPlaylistLikesRepository.findAllByUserId(userId);
+    public List<PlaylistVo> getPlaylistLikes(Long userId, HttpServletRequest request) {
 
-        List<PlaylistLikesResVo> result = new ArrayList<>();
+        Long searchUser = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        List<PlaylistVo> playlistLikes = iPlaylistLikesRepository.getAllByUserId(searchUser, userId);
 
-        ModelMapper mapper = new ModelMapper();
-
-        playlistLikes.forEach(v -> {
-            result.add(mapper.map(v, PlaylistLikesResVo.class));
-        });
-
-        return result;
-
+        return playlistLikes;
     }
 
     // 플레이리스트 좋아요 취소
