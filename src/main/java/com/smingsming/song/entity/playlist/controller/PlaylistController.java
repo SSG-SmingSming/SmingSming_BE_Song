@@ -1,15 +1,15 @@
 package com.smingsming.song.entity.playlist.controller;
 
 import com.smingsming.song.entity.playlist.entity.PlaylistEntity;
-import com.smingsming.song.entity.playlist.entity.PlaylistTrackEntity;
 import com.smingsming.song.entity.playlist.service.IPlaylistService;
 import com.smingsming.song.entity.playlist.vo.PlaylistAddReqVo;
+import com.smingsming.song.entity.playlist.vo.PlaylistDetailVo;
+import com.smingsming.song.entity.playlist.vo.PlaylistTrackAddReqVo;
 import com.smingsming.song.entity.playlist.vo.PlaylistUpdateReqVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -69,12 +69,34 @@ public class PlaylistController {
     }
 
     // 플레이리스트에 곡 추가, 앨범 내 모든 곡 추가 기능
-    @PostMapping(value = "/add/track/{id}")
-    public ResponseEntity<?> addTrackInPlaylist(@PathVariable(value = "id") Long id,
-                                                @RequestBody PlaylistTrackEntity playlistTrackEntity) {
+    @PostMapping(value = "/add/track")
+    public ResponseEntity<?> addTrackInPlaylist(@RequestBody PlaylistTrackAddReqVo playlistTrackAddReqVo) {
 
-        String playlistTrack = iPlaylistService.addTrack(playlistTrackEntity);
-        return ResponseEntity.status(HttpStatus.OK).body(playlistTrack);
+        String result = iPlaylistService.addTrack(playlistTrackAddReqVo);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    // 플레이리스트 내 수록곡 조회
+    @GetMapping(value = "/getAll/track/{playlistId}")
+    public ResponseEntity<?> getPlaylistTrack(@PathVariable(value = "playlistId") Long playlistId, HttpServletRequest request) {
+
+        PlaylistDetailVo result = iPlaylistService.getPlaylistTrack(playlistId, request);
+
+        if(result != null)
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수록곡이 존재하지 않습니다.");
+
+    }
+
+    // 플레이리스트 내 수록곡 삭제
+    @DeleteMapping(value = "/delete/track/{playlistTrackId}")
+    public ResponseEntity<?> deleteTrack(@PathVariable(value = "playlistTrackId") Long playlistTrackId) {
+        boolean result = iPlaylistService.deleteTrack(playlistTrackId);
+
+        if(result)
+            return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제 실패");
+    }
 }

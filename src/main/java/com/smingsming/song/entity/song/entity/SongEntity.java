@@ -34,6 +34,6 @@ public class SongEntity {
     @JoinColumn(name = "album_id")
     private AlbumEntity albumEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private ArtistEntity artist;
 }

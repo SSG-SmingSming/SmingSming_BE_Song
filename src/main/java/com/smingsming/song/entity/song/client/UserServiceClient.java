@@ -15,10 +15,9 @@ import java.util.List;
 public interface UserServiceClient {
 
     @GetMapping("/user/get/{id}")
-    UserDetailVo getUser(@PathVariable Long id);
+    UserDetailVo getUser(@PathVariable(value = "id") Long id);
 
     @GetMapping("/user/search")
-    List<UserVo> userSearch(@RequestParam(defaultValue = "") String keyword,
+    List<UserVo> userSearch(@RequestParam(name = "keyword", defaultValue = "") String keyword,
                             @RequestParam(name = "page", defaultValue = "1") int page);
-
 }
