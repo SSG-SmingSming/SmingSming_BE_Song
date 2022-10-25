@@ -76,13 +76,10 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
         if (playlist != null) {
 
-//            PlaylistUpdateReqVo updateReqVo = PlaylistUpdateReqVo.builder()
-//                    .id(playlist.getId())
-//                    .title(playlist.getTitle())
-//                    .playlistThumbnail(playlistUpdateReqVo.getPlaylistThumbnail())
-//                    .build();
-            playlist.updateName(playlistUpdateReqVo.getName());
-            playlist.updateThumbnail(playlistUpdateReqVo.getThumbnail());
+            if(playlistUpdateReqVo.getName() != null)
+                playlist.updateName(playlistUpdateReqVo.getName());
+            if(playlistUpdateReqVo.getThumbnail() != null)
+                playlist.updateThumbnail(playlistUpdateReqVo.getThumbnail());
 
             return playlist;
         }
