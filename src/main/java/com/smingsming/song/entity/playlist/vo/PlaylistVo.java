@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PlaylistVo {
     Long id;
-    String name;
-    String thumbnail;
+    String playlistName;
+    String playlistThumbnail;
     Long userId;
-    boolean like;
+    boolean playlistLike;
 }

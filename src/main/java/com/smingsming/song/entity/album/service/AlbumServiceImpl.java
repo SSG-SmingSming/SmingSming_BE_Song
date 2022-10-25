@@ -8,7 +8,7 @@ import com.smingsming.song.entity.album.vo.AlbumVo;
 import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.repository.IArtistRepository;
 import com.smingsming.song.entity.song.repository.ISongRepository;
-import com.smingsming.song.entity.song.vo.SongGetVo;
+import com.smingsming.song.entity.song.vo.SongVo;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -96,7 +96,7 @@ public class AlbumServiceImpl implements IAlbumService{
 
         AlbumEntity album = iAlbumRepository.findById(albumId).orElseThrow();
 
-        List<SongGetVo> songList = iSongRepository.findAllByAlbumEntityId(userId, albumId);
+        List<SongVo> songList = iSongRepository.findAllByAlbumEntityId(userId, albumId);
 
         AlbumDetailVo returnVo = AlbumDetailVo.builder()
                 .albumId(album.getId())

@@ -5,13 +5,10 @@ import com.smingsming.song.entity.album.vo.AlbumAddRequestVo;
 import com.smingsming.song.entity.album.service.IAlbumService;
 import com.smingsming.song.entity.album.vo.AlbumDetailVo;
 import com.smingsming.song.entity.album.vo.AlbumVo;
-import com.smingsming.song.entity.song.vo.SongGetVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

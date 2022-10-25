@@ -1,7 +1,6 @@
 package com.smingsming.song.entity.album.repository;
 
 import com.smingsming.song.entity.album.entity.AlbumEntity;
-import com.smingsming.song.entity.song.vo.SongVo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

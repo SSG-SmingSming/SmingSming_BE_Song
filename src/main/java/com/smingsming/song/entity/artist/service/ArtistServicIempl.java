@@ -8,7 +8,7 @@ import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import com.smingsming.song.entity.artist.repository.IArtistRepository;
 import com.smingsming.song.entity.artist.vo.ArtistVo;
 import com.smingsming.song.entity.song.repository.ISongRepository;
-import com.smingsming.song.entity.song.vo.SongGetVo;
+import com.smingsming.song.entity.song.vo.SongVo;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -84,12 +84,12 @@ public class ArtistServicIempl implements IArtistService{
 
     // 아티스트별 음원 조회
     @Override
-    public List<SongGetVo> getSongByArtist(Long artistId, int page, HttpServletRequest request) {
+    public List<SongVo> getSongByArtist(Long artistId, int page, HttpServletRequest request) {
 
         Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
         Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
 
-        List<SongGetVo> songList = iSongRepository.findAllByArtistId(userId, artistId, pr);
+        List<SongVo> songList = iSongRepository.findAllByArtistId(userId, artistId, pr);
 
         return songList;
     }
