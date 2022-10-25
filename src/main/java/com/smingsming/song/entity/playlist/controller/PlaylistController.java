@@ -32,8 +32,8 @@ public class PlaylistController {
 
     // 플레이리스트 조회
     @GetMapping(value = "/get/{userId}")
-    public ResponseEntity<?> getPlaylist(@PathVariable(value = "userId") Long userId) {
-        List<PlaylistEntity> result = iPlaylistService.getPlaylist(userId);
+    public ResponseEntity<?> getPlaylist(@PathVariable(value = "userId") Long userId, HttpServletRequest request) {
+        List<PlaylistVo> result = iPlaylistService.getPlaylist(userId, request);
 
         if(result != null)
             return ResponseEntity.status(HttpStatus.OK).body(result);

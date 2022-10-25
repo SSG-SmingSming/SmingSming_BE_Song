@@ -10,8 +10,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface IPlaylistRepository extends JpaRepository<PlaylistEntity, Long> {
-    List<PlaylistEntity> findAllByUserId(Long userId);
-
     @Query( value = "select new com.smingsming.song.entity.playlist.vo.PlaylistVo( " +
             " p.id, p.title, p.playlistThumbnail, p.userId, " +
             " case when pl.id is not null then true else false end " +
@@ -20,4 +18,13 @@ public interface IPlaylistRepository extends JpaRepository<PlaylistEntity, Long>
             " left join PlaylistLikesEntity pl on p.id = pl.playlistEntity.id " +
             " where p.title like :keyword")
     List<PlaylistVo> findAllByTitleContains(@Param("keyword") String keyword, Pageable pr);
+
+    @Query( value = "select new com.smingsming.song.entity.playlist.vo.PlaylistVo( " +
+            " p.id, p.title, p.playlistThumbnail, p.userId, " +
+            " case when pl.id is not null then true else false end " +
+            " ) " +
+            " from PlaylistEntity p " +
+            " left join PlaylistLikesEntity pl on p.id = pl.playlistEntity.id and pl.userId = :searchUser " +
+            " where p.userId = :searchedUser ")
+    List<PlaylistVo> getAllByUserId(@Param("searchUser") Long searchUser, @Param("searchedUser") Long searchedUser);
 }

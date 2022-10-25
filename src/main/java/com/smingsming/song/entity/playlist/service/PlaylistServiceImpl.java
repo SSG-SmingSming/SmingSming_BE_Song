@@ -1,7 +1,5 @@
 package com.smingsming.song.entity.playlist.service;
 
-import com.smingsming.song.entity.album.repository.IAlbumRepository;
-import com.smingsming.song.entity.artist.repository.IArtistRepository;
 import com.smingsming.song.entity.playlist.entity.PlaylistEntity;
 import com.smingsming.song.entity.playlist.entity.PlaylistTrackEntity;
 import com.smingsming.song.entity.playlist.repository.IPlaylistRepository;
@@ -59,8 +57,9 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     // 플레이리스트 조회
     @Override
-    public List<PlaylistEntity> getPlaylist(Long userId) {
-        List<PlaylistEntity> playlist = iPlaylistRepository.findAllByUserId(userId);
+    public List<PlaylistVo> getPlaylist(Long searchedUser, HttpServletRequest request) {
+        Long searchUser = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        List<PlaylistVo> playlist = iPlaylistRepository.getAllByUserId(searchUser, searchedUser);
 
         if (!playlist.isEmpty()) {
             return playlist;
@@ -131,6 +130,7 @@ public class PlaylistServiceImpl implements IPlaylistService {
         }
     }
 
+    // 플레이리스트 검색
     @Override
     public List<PlaylistVo> playlistSearch(String keyword, int page) {
 
@@ -138,9 +138,9 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
         keyword = "%" + keyword + "%";
 
-        List<PlaylistVo> tmp = iPlaylistRepository.findAllByTitleContains(keyword, pr);
+        List<PlaylistVo> result = iPlaylistRepository.findAllByTitleContains(keyword, pr);
 
-        return tmp;
+        return result;
     }
 
     // 플레이리스트 내 수록곡 조회
