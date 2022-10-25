@@ -3,7 +3,6 @@ package com.smingsming.song.entity.song.controller;
 import com.smingsming.song.entity.song.service.ISongService;
 import com.smingsming.song.entity.song.vo.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +49,7 @@ public class SongController {
     // 재생정보 조회
     @GetMapping("/play/{songId}")
     public ResponseEntity<?> songGet(@PathVariable Long songId) {
-        SongGetVo result = iSongService.songPlay(songId);
+        SongVo result = iSongService.songPlay(songId);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -60,7 +59,7 @@ public class SongController {
     public ResponseEntity<?> songSearch(@RequestParam(defaultValue = "") String keyword,
                                         @RequestParam(name = "page", defaultValue = "1") int page,
                                         HttpServletRequest request) {
-        List<SongGetVo> result = iSongService.songSearch(keyword, page, request);
+        List<SongVo> result = iSongService.songSearch(keyword, page, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

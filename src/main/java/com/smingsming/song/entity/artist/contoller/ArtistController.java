@@ -5,7 +5,7 @@ import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import com.smingsming.song.entity.artist.service.IArtistService;
 import com.smingsming.song.entity.artist.vo.ArtistVo;
-import com.smingsming.song.entity.song.vo.SongGetVo;
+import com.smingsming.song.entity.song.vo.SongVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +42,7 @@ public class ArtistController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("없는 아티스트 번호입니다.");
     }
 
+    // 아티스트 검색
     @GetMapping(value = "/search")
     public ResponseEntity<?> artistSearch(@RequestParam(name = "keyword",defaultValue = "") String keyword,
                                           @RequestParam(name = "page", defaultValue = "1") int page) {
@@ -64,7 +65,7 @@ public class ArtistController {
     public ResponseEntity<?> getArtistSong(@PathVariable(name = "artistId") Long artistId,
                                            @RequestParam(name = "page", defaultValue = "1") int page,
                                            HttpServletRequest request) {
-        List<SongGetVo> result = iArtistService.getSongByArtist(artistId, page, request);
+        List<SongVo> result = iArtistService.getSongByArtist(artistId, page, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

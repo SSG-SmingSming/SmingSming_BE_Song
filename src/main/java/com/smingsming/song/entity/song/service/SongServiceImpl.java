@@ -12,7 +12,6 @@ import com.smingsming.song.entity.song.repository.ISongRepository;
 import com.smingsming.song.entity.song.vo.*;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.bouncycastle.cert.ocsp.Req;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.domain.PageRequest;
@@ -133,7 +132,7 @@ public class SongServiceImpl implements ISongService {
 //    }
 
     @Override
-    public SongGetVo songPlay(Long id) {
+    public SongVo songPlay(Long id) {
         SongEntity songEntity = iSongRepository.findById(id).orElseThrow();
 
 //        SongGetVo returnVo = new ModelMapper().map(songEntity, SongGetVo.class);
@@ -142,12 +141,13 @@ public class SongServiceImpl implements ISongService {
         AlbumEntity album = iAlbumRepository.findById(songEntity.getAlbumEntity().getId()).orElseThrow();
 
 
-        SongGetVo returnVo = SongGetVo.builder()
+        SongVo returnVo = SongVo.builder()
                 .id(songEntity.getId())
                 .albumId(songEntity.getAlbumEntity().getId())
-                .thumbnail(songEntity.getAlbumEntity().getAlbumThumbnail())
+                .songThumbnail(songEntity.getAlbumEntity().getAlbumThumbnail())
                 .songUri(songEntity.getSongUri())
-                .name(songEntity.getSongName())
+                .songName(songEntity.getSongName())
+                .isFormal(songEntity.isFormal())
                 .build();
 
         if(songEntity.isFormal()) {
@@ -161,11 +161,11 @@ public class SongServiceImpl implements ISongService {
     }
 
     @Override
-    public List<SongGetVo> songSearch(String keyword, int page, HttpServletRequest request) {
+    public List<SongVo> songSearch(String keyword, int page, HttpServletRequest request) {
 
         Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
 
-        List<SongGetVo> songList = new ArrayList<>();
+        List<SongVo> songList = new ArrayList<>();
         Pageable pr = PageRequest.of(page - 1 , 20, Sort.by("id").descending());
 
         keyword = "%" + keyword + "%";
@@ -202,7 +202,7 @@ public class SongServiceImpl implements ISongService {
             albumVoList.add(mapper.map(v, AlbumVo.class));
         });
 
-        List<SongGetVo> songList = iSongRepository.getSongListByKeyword(pr, keyword, userId);
+        List<SongVo> songList = iSongRepository.getSongListByKeyword(pr, keyword, userId);
 
         SearchResultVo result = new SearchResultVo();
         result.setSongList(songList);

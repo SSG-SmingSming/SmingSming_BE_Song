@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchResultVo {
-    List<SongGetVo> songList;
+    List<SongVo> songList;
     List<AlbumVo> albumList;
     List<ArtistVo> artistList;
     List<UserVo> userList;

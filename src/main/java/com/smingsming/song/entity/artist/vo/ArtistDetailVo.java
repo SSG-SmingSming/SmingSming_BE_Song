@@ -1,7 +1,7 @@
 package com.smingsming.song.entity.artist.vo;
 
 import com.smingsming.song.entity.album.vo.AlbumVo;
-import com.smingsming.song.entity.song.vo.SongGetVo;
+import com.smingsming.song.entity.song.vo.SongVo;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,5 +13,5 @@ public class ArtistDetailVo {
     private LocalDate debutDate;
 
     private List<AlbumVo> albumVoList;
-    private List<SongGetVo> songList;
+    private List<SongVo> songList;
 }
