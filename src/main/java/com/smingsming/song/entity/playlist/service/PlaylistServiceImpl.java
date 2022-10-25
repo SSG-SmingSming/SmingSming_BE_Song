@@ -89,12 +89,16 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     // 플레이리스트 삭제
     @Override
-    public boolean deletePlaylist(Long playlistId) {
+    public boolean deletePlaylist(Long playlistId, HttpServletRequest request) {
+        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
         Optional<PlaylistEntity> playlist = iPlaylistRepository.findById(playlistId);
 
         if (playlist.isPresent()) {
-            iPlaylistRepository.deleteById(playlistId);
-            return true;
+            if(playlist.get().getUserId() == userId) {
+                iPlaylistRepository.deleteById(playlistId);
+                return true;
+            }
+            return false;
         }
         return false;
     }

@@ -65,8 +65,8 @@ public class PlaylistController {
 
     // 플레이리스트 삭제
     @DeleteMapping(value = "/delete/{playlistId}")
-    public ResponseEntity<?> deletePlaylist(@PathVariable(value = "playlistId") Long playlistId) {
-        boolean result = iPlaylistService.deletePlaylist(playlistId);
+    public ResponseEntity<?> deletePlaylist(@PathVariable(value = "playlistId") Long playlistId, HttpServletRequest request) {
+        boolean result = iPlaylistService.deletePlaylist(playlistId, request);
 
         if(result)
             return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
