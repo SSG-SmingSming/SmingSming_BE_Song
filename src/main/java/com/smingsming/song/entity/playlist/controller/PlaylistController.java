@@ -97,8 +97,9 @@ public class PlaylistController {
 
     // 플레이리스트 내 수록곡 삭제
     @DeleteMapping(value = "/delete/track/{playlistTrackId}")
-    public ResponseEntity<?> deleteTrack(@PathVariable(value = "playlistTrackId") Long playlistTrackId) {
-        boolean result = iPlaylistService.deleteTrack(playlistTrackId);
+    public ResponseEntity<?> deleteTrack(@PathVariable(value = "playlistTrackId") Long playlistTrackId,
+                                         HttpServletRequest request) {
+        boolean result = iPlaylistService.deleteTrack(playlistTrackId, request);
 
         if(result)
             return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");

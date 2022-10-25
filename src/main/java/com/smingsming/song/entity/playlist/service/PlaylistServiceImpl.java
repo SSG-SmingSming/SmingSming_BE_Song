@@ -184,13 +184,21 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     // 플레이리스트 내 수록곡 삭제
     @Override
-    public boolean deleteTrack(Long playlistTrackId) {
+    public boolean deleteTrack(Long playlistTrackId, HttpServletRequest request) {
 
+        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
         Optional<PlaylistTrackEntity> playlistTrack = iPlaylistTrackRepository.findById(playlistTrackId);
 
         if (playlistTrack.isPresent()) {
-            iPlaylistTrackRepository.deleteById(playlistTrackId);
-            return true;
+            Optional<PlaylistEntity> playlist = iPlaylistRepository.findById(playlistTrack.get().getPlaylistId());
+
+            if (playlist.isPresent()) {
+                if (playlist.get().getUserId() == userId) {
+                    iPlaylistTrackRepository.deleteById(playlistTrackId);
+                    return true;
+
+                }
+            }
         }
         return false;
     }
