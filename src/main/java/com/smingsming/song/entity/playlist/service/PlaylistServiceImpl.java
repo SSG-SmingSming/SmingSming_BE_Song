@@ -106,10 +106,15 @@ public class PlaylistServiceImpl implements IPlaylistService {
     // 플레이리스트 내 수록곡 추가
     @Override
     @Transactional
-    public String addTrack(PlaylistTrackAddReqVo playlistTrackAddReqVo) {
+    public String addTrack(PlaylistTrackAddReqVo playlistTrackAddReqVo, HttpServletRequest request) {
 
+        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
         SongEntity songEntity = iSongRepository.getById(playlistTrackAddReqVo.getSongId());
         PlaylistEntity playlistEntity = iPlaylistRepository.getById(playlistTrackAddReqVo.getPlaylistId());
+
+        if (userId != playlistEntity.getUserId()) {
+            return "본인의 플레이리스트에만 추가할 수 있습니다.";
+        }
 
         if (playlistEntity == null) {
             throw new IllegalStateException("플레이리스트가 존재하지 않습니다.");

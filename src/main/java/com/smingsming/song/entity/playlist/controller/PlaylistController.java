@@ -76,9 +76,9 @@ public class PlaylistController {
 
     // 플레이리스트에 곡 추가, 앨범 내 모든 곡 추가 기능
     @PostMapping(value = "/add/track")
-    public ResponseEntity<?> addTrackInPlaylist(@RequestBody PlaylistTrackAddReqVo playlistTrackAddReqVo) {
+    public ResponseEntity<?> addTrackInPlaylist(@RequestBody PlaylistTrackAddReqVo playlistTrackAddReqVo, HttpServletRequest request) {
 
-        String result = iPlaylistService.addTrack(playlistTrackAddReqVo);
+        String result = iPlaylistService.addTrack(playlistTrackAddReqVo, request);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

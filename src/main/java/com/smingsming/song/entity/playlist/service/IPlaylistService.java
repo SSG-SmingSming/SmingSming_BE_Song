@@ -12,7 +12,7 @@ public interface IPlaylistService {
     List<PlaylistVo> getPlaylist(Long userId, HttpServletRequest request);
     PlaylistEntity editPlaylist(PlaylistUpdateReqVo playlistUpdateReqVo);
     boolean deletePlaylist(Long playlistId, HttpServletRequest request);
-    String addTrack(PlaylistTrackAddReqVo playlistTrackAddReqVo);
+    String addTrack(PlaylistTrackAddReqVo playlistTrackAddReqVo, HttpServletRequest request);
     PlaylistDetailVo getPlaylistTrack(Long playlistTrackId, HttpServletRequest request);
     boolean deleteTrack(Long playlistTrackId);
     List<PlaylistVo> playlistSearch(String keyword, int page);
