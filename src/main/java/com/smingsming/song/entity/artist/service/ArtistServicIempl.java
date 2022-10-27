@@ -113,14 +113,14 @@ public class ArtistServicIempl implements IArtistService{
         return returnVo;
     }
 
-    // 아티스트 정보수정
+    // 아티스트 정보 수정
     @Override
     @Transactional
-    public boolean updateArtist(Long artistId, String artistThumbUri) {
+    public boolean updateArtist(Long artistId, String artistThumbnail) {
 
         ArtistEntity artistEntity = iArtistRepository.findById(artistId).orElseThrow();
 
-        artistEntity.updateThumbnail(artistThumbUri);
+        artistEntity.updateThumbnail(artistThumbnail);
 
         return true;
     }

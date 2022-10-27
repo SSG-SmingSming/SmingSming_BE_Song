@@ -149,6 +149,17 @@ public class PlaylistServiceImpl implements IPlaylistService {
         return result;
     }
 
+    // 플레이리스트 갯수 집계
+    @Override
+    public PlaylistCountVo countPlaylist(Long userId) {
+
+        Long playlistCount = iPlaylistRepository.countByUserId(userId);
+
+        PlaylistCountVo playlistCountVo = new PlaylistCountVo(playlistCount);
+
+        return playlistCountVo;
+    }
+
     // 플레이리스트 내 수록곡 조회
     @Override
     @Transactional

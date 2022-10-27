@@ -30,4 +30,9 @@ public class AlbumEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private ArtistEntity artist;
+
+    public void updateAlbumInfo(String title, String albumThumbnail) {
+        this.title = title;
+        this.albumThumbnail = albumThumbnail;
+    }
 }
