@@ -64,7 +64,13 @@ public class SongController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @GetMapping("/get/custom/{userId}")
+    public ResponseEntity<?> customSongGet(@PathVariable(name = "userId") Long userId,
+                                           HttpServletRequest request) {
+        List<SongVo> result = iSongService.customSongGet(userId, request);
 
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
 
     // 전체 검색
     @GetMapping("/total/search")

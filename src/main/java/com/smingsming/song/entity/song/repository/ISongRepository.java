@@ -40,9 +40,6 @@ public interface ISongRepository extends JpaRepository<SongEntity, Long> {
     )
     List<SongVo> getSongListByKeyword(Pageable pr, @Param("keyword") String keyword, @Param("userId") Long userId);
 
-//    List<SongEntity> findAllByAlbumEntityId(Long id);
-
-
     @Query(value = "select new com.smingsming.song.entity.song.vo.SongVo(" +
             " s.id, s.userId, album.id, artist.name, album.albumThumbnail, " +
             " s.songName, s.songUri, " +
@@ -70,6 +67,21 @@ public interface ISongRepository extends JpaRepository<SongEntity, Long> {
             " where s.artist.id = :artistId "
     )
     List<SongVo> findAllByArtistId(@Param("userId") Long userId, @Param("artistId") Long artistId, Pageable pr);
+
+    @Query(value = "select new com.smingsming.song.entity.song.vo.SongVo(" +
+            " s.id, s.userId, album.id, artist.name, album.albumThumbnail, " +
+            " s.songName, s.songUri, " +
+            " case when sl.id is not null then true else false end, " +
+            " s.formal " +
+            " ) " +
+            " from SongEntity s " +
+            " left join AlbumEntity album on s.albumEntity.id = album.id " +
+            " left join ArtistEntity artist on s.artist.id = artist.id " +
+            " left join SongLikesEntity sl on s.id = sl.songEntity.id and sl.userId = :searchUser " +
+            " where s.formal = false  " +
+            " and s.userId = :searchedUser "
+    )
+    List<SongVo> getAllByIsFormalAndSongId(@Param("searchUser") Long searchUser, @Param("searchedUser") Long searchedUser);
 
 //
 //    @Query(value = "select new com.smingsming.song.entity.song.vo.SongVo(" +

@@ -13,6 +13,7 @@ import com.smingsming.song.entity.song.repository.ISongRepository;
 import com.smingsming.song.entity.song.vo.*;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class SongServiceImpl implements ISongService {
 
@@ -88,6 +90,30 @@ public class SongServiceImpl implements ISongService {
         return true;
     }
 
+    @Override
+    public List<SongVo> customSongGet(Long searchedUser, HttpServletRequest request) {
+        Long searchUser = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+
+        List<SongVo> songVoList = iSongRepository.getAllByIsFormalAndSongId(searchUser, searchedUser);
+        List<SongVo> returnVo = new ArrayList<>();
+
+        songVoList.forEach(v -> {
+            UserDetailVo user = userServiceClient.getUser(v.getUserId());
+            returnVo.add(SongVo.builder()
+                            .id(v.getId())
+                            .userId(v.getUserId())
+                            .albumId(v.getAlbumId())
+                            .artistName(user.getNickName())
+                            .songThumbnail(v.getSongThumbnail())
+                            .songName(v.getSongName())
+                            .songUri(v.getSongUri())
+                            .isLike(v.isLike())
+                            .isFormal(v.isFormal())
+                    .build());
+        });
+
+        return returnVo;
+    }
 
     @Override
     public boolean songDelete(Long id) {
@@ -112,26 +138,6 @@ public class SongServiceImpl implements ISongService {
         }
         return false;
     }
-
-//    @Override
-//    public SongVo songPlay(Long id) {
-//        SongEntity songEntity = iSongRepository.findById(id).orElseThrow();
-//
-//        SongVo returnVo = new ModelMapper().map(songEntity, SongVo.class);
-//
-//        AlbumEntity album = iAlbumRepository.findById(songEntity.getAlbumEntity().getId()).orElseThrow();
-//        returnVo.setAlbumName(album.getTitle());
-//        if(songEntity.isFormal()) {
-//            ArtistEntity artist = iArtistRepository.findById(songEntity.getArtist().getId()).orElseThrow();
-//
-//            returnVo.setArtistName(artist.getName());
-//        }else {
-//            UserVo user = userServiceClient.getUser(songEntity.getUserId());
-//            returnVo.setArtistName(user.getNickName());
-//        }
-//
-//        return returnVo;
-//    }
 
     @Override
     public SongVo songPlay(Long songId, HttpServletRequest request) {

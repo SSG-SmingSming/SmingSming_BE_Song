@@ -41,7 +41,7 @@ public class SongLikesController {
         if(result.size() != 0)
             return ResponseEntity.status(HttpStatus.OK).body(result);
         else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("좋아요를 누른 음원이 존재하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.OK).body(false);
     }
 
     // 음원 좋아요 취소
