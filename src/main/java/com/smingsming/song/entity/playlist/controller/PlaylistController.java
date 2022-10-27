@@ -84,6 +84,13 @@ public class PlaylistController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    // 플레이리스트 갯수 집계
+    @GetMapping("/count/{userId}")
+    public ResponseEntity<?> countFollow(@PathVariable(value = "userId") Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(iPlaylistService.countPlaylist(userId));
+    }
+
+
     // 플레이리스트 내 수록곡 조회
     @GetMapping(value = "/getAll/track/{playlistId}")
     public ResponseEntity<?> getPlaylistTrack(@PathVariable(value = "playlistId") Long playlistId, HttpServletRequest request) {

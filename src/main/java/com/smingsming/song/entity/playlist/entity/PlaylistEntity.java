@@ -44,7 +44,7 @@ public class PlaylistEntity {
         this.userId = userId;
     }
 
-    public  void updateName(String title) { this.title = title; }
+    public void updateName(String title) { this.title = title; }
     public void updateThumbnail(String playlistThumbnail) {
         this.playlistThumbnail = playlistThumbnail;
     }

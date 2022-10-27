@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-public class AlbumAddRequestVo {
+public class AlbumAddReqVo {
     private String title;
     private LocalDate releaseDate;
     private String albumThumbnail;

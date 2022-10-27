@@ -16,4 +16,6 @@ public interface IPlaylistService {
     PlaylistDetailVo getPlaylistTrack(Long playlistTrackId, HttpServletRequest request);
     boolean deleteTrack(Long playlistTrackId, HttpServletRequest request);
     List<PlaylistVo> playlistSearch(String keyword, int page);
+
+    PlaylistCountVo countPlaylist(Long userId);
 }

@@ -1,6 +1,7 @@
 package com.smingsming.song.entity.playlist.repository;
 
 import com.smingsming.song.entity.playlist.entity.PlaylistEntity;
+import com.smingsming.song.entity.playlist.vo.PlaylistCountVo;
 import com.smingsming.song.entity.playlist.vo.PlaylistVo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,5 +27,8 @@ public interface IPlaylistRepository extends JpaRepository<PlaylistEntity, Long>
             " from PlaylistEntity p " +
             " left join PlaylistLikesEntity pl on p.id = pl.playlistEntity.id and pl.userId = :searchUser " +
             " where p.userId = :searchedUser ")
+            
     List<PlaylistVo> getAllByUserId(@Param("searchUser") Long searchUser, @Param("searchedUser") Long searchedUser, Pageable pr);
+    Long countByUserId(Long userId);
+
 }
