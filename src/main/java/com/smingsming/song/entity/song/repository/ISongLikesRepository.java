@@ -13,6 +13,8 @@ public interface ISongLikesRepository extends JpaRepository<SongLikesEntity, Lon
     SongLikesEntity findByUserIdAndSongEntityId(Long userId, Long songId);
     List<SongLikesEntity> findAllByUserId(Long userId);
 
+    Boolean existsBySongEntityIdAndUserId(Long songId, Long userId);
+
     @Query(" select new com.smingsming.song.entity.song.vo.SongVo( " +
             " s.id, s.songEntity.userId, s.songEntity.albumEntity.id, s.songEntity.artist.name, " +
             " s.songEntity.albumEntity.albumThumbnail, s.songEntity.songName, " +

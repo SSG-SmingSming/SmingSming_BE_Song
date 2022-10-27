@@ -32,13 +32,15 @@ public class PlaylistController {
 
     // 플레이리스트 조회
     @GetMapping(value = "/get/{userId}")
-    public ResponseEntity<?> getPlaylist(@PathVariable(value = "userId") Long userId, HttpServletRequest request) {
-        List<PlaylistVo> result = iPlaylistService.getPlaylist(userId, request);
+    public ResponseEntity<?> getPlaylist(@PathVariable(value = "userId") Long userId,
+                                         @RequestParam(name = "page", defaultValue = "1") int page,
+                                         HttpServletRequest request) {
+        List<PlaylistVo> result = iPlaylistService.getPlaylist(userId, page, request);
 
         if(result != null)
             return ResponseEntity.status(HttpStatus.OK).body(result);
         else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("플레이리스트가 존재하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.OK).body(false);
     }
 
     // 플레이리스트 검색
@@ -71,7 +73,7 @@ public class PlaylistController {
         if(result)
             return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
         else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제 실패");
+            return ResponseEntity.status(HttpStatus.OK).body("삭제 실패");
     }
 
     // 플레이리스트에 곡 추가, 앨범 내 모든 곡 추가 기능
@@ -111,6 +113,6 @@ public class PlaylistController {
         if(result)
             return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
         else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제 실패");
+            return ResponseEntity.status(HttpStatus.OK).body("삭제 실패");
     }
 }

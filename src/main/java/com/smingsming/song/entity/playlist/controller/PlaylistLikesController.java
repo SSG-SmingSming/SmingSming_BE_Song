@@ -38,7 +38,7 @@ public class PlaylistLikesController {
         if(result.size() != 0)
             return ResponseEntity.status(HttpStatus.OK).body(result);
         else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("좋아요한 플레이리스트가 존재하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.OK).body(false);
     }
 
     // 플레이리스트 좋아요 취소

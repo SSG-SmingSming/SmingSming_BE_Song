@@ -48,8 +48,8 @@ public class SongController {
 
     // 재생정보 조회
     @GetMapping("/play/{songId}")
-    public ResponseEntity<?> songGet(@PathVariable Long songId) {
-        SongVo result = iSongService.songPlay(songId);
+    public ResponseEntity<?> songGet(@PathVariable Long songId, HttpServletRequest request) {
+        SongVo result = iSongService.songPlay(songId, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
