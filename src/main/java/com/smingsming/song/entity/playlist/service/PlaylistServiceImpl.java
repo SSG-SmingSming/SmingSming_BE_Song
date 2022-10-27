@@ -57,9 +57,12 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     // 플레이리스트 조회
     @Override
-    public List<PlaylistVo> getPlaylist(Long searchedUser, HttpServletRequest request) {
+    public List<PlaylistVo> getPlaylist(Long searchedUser, int page, HttpServletRequest request) {
         Long searchUser = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
-        List<PlaylistVo> playlist = iPlaylistRepository.getAllByUserId(searchUser, searchedUser);
+
+        Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
+
+        List<PlaylistVo> playlist = iPlaylistRepository.getAllByUserId(searchUser, searchedUser, pr);
 
         if (!playlist.isEmpty()) {
             return playlist;

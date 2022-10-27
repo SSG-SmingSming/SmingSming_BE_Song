@@ -9,7 +9,7 @@ import java.util.List;
 public interface IPlaylistService {
 
     PlaylistEntity addPlaylist(PlaylistAddReqVo playlistAddReqVo, HttpServletRequest request);
-    List<PlaylistVo> getPlaylist(Long userId, HttpServletRequest request);
+    List<PlaylistVo> getPlaylist(Long userId, int page, HttpServletRequest request);
     PlaylistEntity editPlaylist(PlaylistUpdateReqVo playlistUpdateReqVo);
     boolean deletePlaylist(Long playlistId, HttpServletRequest request);
     String addTrack(PlaylistTrackAddReqVo playlistTrackAddReqVo, HttpServletRequest request);

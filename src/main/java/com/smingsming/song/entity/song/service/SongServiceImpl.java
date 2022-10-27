@@ -8,6 +8,7 @@ import com.smingsming.song.entity.artist.repository.IArtistRepository;
 import com.smingsming.song.entity.artist.vo.ArtistVo;
 import com.smingsming.song.entity.song.client.UserServiceClient;
 import com.smingsming.song.entity.song.entity.SongEntity;
+import com.smingsming.song.entity.song.repository.ISongLikesRepository;
 import com.smingsming.song.entity.song.repository.ISongRepository;
 import com.smingsming.song.entity.song.vo.*;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
@@ -30,6 +31,7 @@ import java.util.Optional;
 public class SongServiceImpl implements ISongService {
 
     private final ISongRepository iSongRepository;
+    private final ISongLikesRepository iSongLikesRepository;
     private final IAlbumRepository iAlbumRepository;
     private final IArtistRepository iArtistRepository;
     private final UserServiceClient userServiceClient;
@@ -132,14 +134,10 @@ public class SongServiceImpl implements ISongService {
 //    }
 
     @Override
-    public SongVo songPlay(Long id) {
-        SongEntity songEntity = iSongRepository.findById(id).orElseThrow();
+    public SongVo songPlay(Long songId, HttpServletRequest request) {
+        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
 
-//        SongGetVo returnVo = new ModelMapper().map(songEntity, SongGetVo.class);
-
-
-        AlbumEntity album = iAlbumRepository.findById(songEntity.getAlbumEntity().getId()).orElseThrow();
-
+        SongEntity songEntity = iSongRepository.findById(songId).orElseThrow();
 
         SongVo returnVo = SongVo.builder()
                 .id(songEntity.getId())
@@ -148,6 +146,7 @@ public class SongServiceImpl implements ISongService {
                 .songUri(songEntity.getSongUri())
                 .songName(songEntity.getSongName())
                 .isFormal(songEntity.isFormal())
+                .isLike(iSongLikesRepository.existsBySongEntityIdAndUserId(songId, userId))
                 .build();
 
         if(songEntity.isFormal()) {
