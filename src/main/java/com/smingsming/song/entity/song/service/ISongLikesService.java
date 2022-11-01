@@ -11,6 +11,6 @@ import java.util.List;
 public interface ISongLikesService {
 
     String addSongLikes(Long songId, HttpServletRequest request);
-    List<SongLikesResVo> getSongLikes(Long Id);
+    List<SongLikesResVo> getSongLikes(String uuid);
     boolean deleteSongLikes(SongLikesDeleteReqVo songLikesDeleteReqVo);
 }

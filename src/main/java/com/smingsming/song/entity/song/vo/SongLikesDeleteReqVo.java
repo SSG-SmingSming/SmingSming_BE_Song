@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class SongLikesDeleteReqVo {
 
     private Long id;
-    private Long userId;
+    private String uuid;
 }

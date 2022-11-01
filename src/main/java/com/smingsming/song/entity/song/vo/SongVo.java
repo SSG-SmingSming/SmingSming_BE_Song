@@ -9,7 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class SongVo {
     private Long id;
-    private Long userId;
+    private String uuid;
     private Long albumId;
     private String artistName;
     private String songThumbnail;

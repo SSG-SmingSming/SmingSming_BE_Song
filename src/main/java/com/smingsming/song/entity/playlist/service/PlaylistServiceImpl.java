@@ -38,14 +38,14 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     public PlaylistEntity addPlaylist(PlaylistAddReqVo playlistAddReqVo, HttpServletRequest request) {
 
-        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
 
         ModelMapper mapper = new ModelMapper();
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         PlaylistEntity mapPlaylistEntity = mapper.map(playlistAddReqVo, PlaylistEntity.class);
-        mapPlaylistEntity.setUserId(userId);
+        mapPlaylistEntity.setUuid(uuid);
 
         PlaylistEntity playlistEntity = iPlaylistRepository.save(mapPlaylistEntity);
 
@@ -57,12 +57,12 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     // 플레이리스트 조회
     @Override
-    public List<PlaylistVo> getPlaylist(Long searchedUser, int page, HttpServletRequest request) {
-        Long searchUser = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+    public List<PlaylistVo> getPlaylist(String searchedUser, int page, HttpServletRequest request) {
+        String searchUser = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
 
         Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
 
-        List<PlaylistVo> playlist = iPlaylistRepository.getAllByUserId(searchUser, searchedUser, pr);
+        List<PlaylistVo> playlist = iPlaylistRepository.getAllByUuid(searchUser, searchedUser, pr);
 
         if (!playlist.isEmpty()) {
             return playlist;
@@ -92,13 +92,17 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     // 플레이리스트 삭제
     @Override
+    @Transactional
     public boolean deletePlaylist(Long playlistId, HttpServletRequest request) {
-        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
         Optional<PlaylistEntity> playlist = iPlaylistRepository.findById(playlistId);
 
+
         if (playlist.isPresent()) {
-            if(playlist.get().getUserId() == userId) {
+
+            if(playlist.get().getUuid().equals(uuid)) {
                 iPlaylistRepository.deleteById(playlistId);
+                iPlaylistTrackRepository.deleteAllByPlaylistId(playlistId);
                 return true;
             }
             return false;
@@ -111,11 +115,12 @@ public class PlaylistServiceImpl implements IPlaylistService {
     @Transactional
     public String addTrack(PlaylistTrackAddReqVo playlistTrackAddReqVo, HttpServletRequest request) {
 
-        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
         SongEntity songEntity = iSongRepository.getById(playlistTrackAddReqVo.getSongId());
         PlaylistEntity playlistEntity = iPlaylistRepository.getById(playlistTrackAddReqVo.getPlaylistId());
 
-        if (userId != playlistEntity.getUserId()) {
+//        if (uuid.equals(playlistEntity.getUuid())) {
+        if (! uuid.equals(playlistEntity.getUuid())) {
             return "본인의 플레이리스트에만 추가할 수 있습니다.";
         }
 
@@ -154,9 +159,9 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     // 플레이리스트 갯수 집계
     @Override
-    public PlaylistCountVo countPlaylist(Long userId) {
+    public PlaylistCountVo countPlaylist(String uuid) {
 
-        Long playlistCount = iPlaylistRepository.countByUserId(userId);
+        Long playlistCount = iPlaylistRepository.countByUuid(uuid);
 
         PlaylistCountVo playlistCountVo = new PlaylistCountVo(playlistCount);
 
@@ -168,16 +173,14 @@ public class PlaylistServiceImpl implements IPlaylistService {
     @Transactional
     public PlaylistDetailVo getPlaylistTrack(Long playlistId, HttpServletRequest request) {
 
-        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
         PlaylistEntity playlist = iPlaylistRepository.findById(playlistId).orElseThrow();
 
         List<PlaylistTrackEntity> trackList = iPlaylistTrackRepository.findAllByPlaylistId(playlistId);
 
         List<PlaylistTrackVo> trackVoList = new ArrayList<>();
-        ModelMapper mapper = new ModelMapper();
 
         trackList.forEach(v -> {
-            SongEntity song = iSongRepository.findById(v.getSongId()).get();
 
             trackVoList.add(PlaylistTrackVo.builder()
                     .id(v.getId())
@@ -200,14 +203,14 @@ public class PlaylistServiceImpl implements IPlaylistService {
     @Override
     public boolean deleteTrack(Long playlistTrackId, HttpServletRequest request) {
 
-        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
         Optional<PlaylistTrackEntity> playlistTrack = iPlaylistTrackRepository.findById(playlistTrackId);
 
         if (playlistTrack.isPresent()) {
             Optional<PlaylistEntity> playlist = iPlaylistRepository.findById(playlistTrack.get().getPlaylistId());
 
             if (playlist.isPresent()) {
-                if (playlist.get().getUserId() == userId) {
+                if (playlist.get().getUuid().equals(uuid)) {
                     iPlaylistTrackRepository.deleteById(playlistTrackId);
                     return true;
 

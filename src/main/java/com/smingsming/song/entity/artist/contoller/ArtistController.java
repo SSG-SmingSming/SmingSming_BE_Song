@@ -70,10 +70,11 @@ public class ArtistController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @PutMapping(value = "/update/{artistId}/{artistThumbUri}")
+    // 아티스트 정보 수정
+    @PutMapping(value = "/update/{artistId}")
     public ResponseEntity<String> updateArtist(@PathVariable("artistId") Long artistId,
-                                               @PathVariable("artistThumbUri") String artistThumbUri) {
-        boolean result = iArtistService.updateArtist(artistId, artistThumbUri);
+                                               @RequestBody ArtistVo artistVo) {
+        boolean result = iArtistService.updateArtist(artistId, artistVo);
 
         if (result)
             return ResponseEntity.status(HttpStatus.OK).body("수정 완료");
@@ -81,6 +82,7 @@ public class ArtistController {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("수정 실패");
     }
 
+    // 아티스트 정보 삭제
     @DeleteMapping(value = "/delete/{artistId}")
     public ResponseEntity<String> deleteArtist(@PathVariable("artistId") Long artistId) {
         boolean result = iArtistService.deleteArtist(artistId);

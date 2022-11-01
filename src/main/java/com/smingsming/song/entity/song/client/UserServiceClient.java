@@ -14,8 +14,8 @@ import java.util.List;
 @FeignClient(name = "user-server")
 public interface UserServiceClient {
 
-    @GetMapping("/user/get/{id}")
-    UserDetailVo getUser(@PathVariable(value = "id") Long id);
+    @GetMapping("/user/get/{uuid}")
+    UserDetailVo getUuid(@PathVariable(value = "uuid") String uuid);
 
     @GetMapping("/user/search")
     List<UserVo> userSearch(@RequestParam(name = "keyword", defaultValue = "") String keyword,

@@ -31,11 +31,11 @@ public class PlaylistController {
     }
 
     // 플레이리스트 조회
-    @GetMapping(value = "/get/{userId}")
-    public ResponseEntity<?> getPlaylist(@PathVariable(value = "userId") Long userId,
+    @GetMapping(value = "/get/{uuid}")
+    public ResponseEntity<?> getPlaylist(@PathVariable(value = "uuid") String uuid,
                                          @RequestParam(name = "page", defaultValue = "1") int page,
                                          HttpServletRequest request) {
-        List<PlaylistVo> result = iPlaylistService.getPlaylist(userId, page, request);
+        List<PlaylistVo> result = iPlaylistService.getPlaylist(uuid, page, request);
 
         if(result != null)
             return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -85,9 +85,9 @@ public class PlaylistController {
     }
 
     // 플레이리스트 갯수 집계
-    @GetMapping("/count/{userId}")
-    public ResponseEntity<?> countFollow(@PathVariable(value = "userId") Long userId) {
-        return ResponseEntity.status(HttpStatus.OK).body(iPlaylistService.countPlaylist(userId));
+    @GetMapping("/count/{uuid}")
+    public ResponseEntity<?> countFollow(@PathVariable(value = "uuid") String uuid) {
+        return ResponseEntity.status(HttpStatus.OK).body(iPlaylistService.countPlaylist(uuid));
     }
 
 

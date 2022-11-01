@@ -28,6 +28,8 @@ public class AlbumEntity {
     @NotNull
     private LocalDate releaseDate;
 
+    private String uuid;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private ArtistEntity artist;
 

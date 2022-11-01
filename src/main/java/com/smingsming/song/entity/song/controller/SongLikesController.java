@@ -34,9 +34,9 @@ public class SongLikesController {
     }
 
     // 좋아요한 음원 목록 조회
-    @GetMapping(value = "/get/{userId}")
-    public ResponseEntity<?> getPlaylistLikes(@PathVariable(value = "userId") Long userId) {
-        List<SongLikesResVo> result = iSongLikesService.getSongLikes(userId);
+    @GetMapping(value = "/get/{uuid}")
+    public ResponseEntity<?> getPlaylistLikes(@PathVariable(value = "uuid") String uuid) {
+        List<SongLikesResVo> result = iSongLikesService.getSongLikes(uuid);
 
         if(result.size() != 0)
             return ResponseEntity.status(HttpStatus.OK).body(result);

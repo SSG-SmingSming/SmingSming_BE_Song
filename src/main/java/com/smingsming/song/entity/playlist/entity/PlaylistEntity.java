@@ -34,14 +34,13 @@ public class PlaylistEntity {
     private String playlistThumbnail;
 
     @NotNull
-    private Long userId;
-
+    private String uuid;
 
     @Builder
-    public PlaylistEntity(String title, String playlistThumbnail, Long userId) {
+    public PlaylistEntity(String title, String playlistThumbnail, String uuid) {
         this.title = title;
         this.playlistThumbnail = playlistThumbnail;
-        this.userId = userId;
+        this.uuid = uuid;
     }
 
     public void updateName(String title) { this.title = title; }

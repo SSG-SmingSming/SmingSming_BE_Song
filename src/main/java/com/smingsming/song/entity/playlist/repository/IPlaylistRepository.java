@@ -1,7 +1,6 @@
 package com.smingsming.song.entity.playlist.repository;
 
 import com.smingsming.song.entity.playlist.entity.PlaylistEntity;
-import com.smingsming.song.entity.playlist.vo.PlaylistCountVo;
 import com.smingsming.song.entity.playlist.vo.PlaylistVo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +11,7 @@ import java.util.List;
 
 public interface IPlaylistRepository extends JpaRepository<PlaylistEntity, Long> {
     @Query( value = "select new com.smingsming.song.entity.playlist.vo.PlaylistVo( " +
-            " p.id, p.title, p.playlistThumbnail, p.userId, " +
+            " p.id, p.title, p.playlistThumbnail, p.uuid, " +
             " case when pl.id is not null then true else false end " +
             ") " +
             " from PlaylistEntity p " +
@@ -21,14 +20,14 @@ public interface IPlaylistRepository extends JpaRepository<PlaylistEntity, Long>
     List<PlaylistVo> findAllByTitleContains(@Param("keyword") String keyword, Pageable pr);
 
     @Query( value = "select new com.smingsming.song.entity.playlist.vo.PlaylistVo( " +
-            " p.id, p.title, p.playlistThumbnail, p.userId, " +
+            " p.id, p.title, p.playlistThumbnail, p.uuid, " +
             " case when pl.id is not null then true else false end " +
             " ) " +
             " from PlaylistEntity p " +
-            " left join PlaylistLikesEntity pl on p.id = pl.playlistEntity.id and pl.userId = :searchUser " +
-            " where p.userId = :searchedUser ")
+            " left join PlaylistLikesEntity pl on p.id = pl.playlistEntity.id and pl.uuid = :searchUser " +
+            " where p.uuid = :searchedUser ")
             
-    List<PlaylistVo> getAllByUserId(@Param("searchUser") Long searchUser, @Param("searchedUser") Long searchedUser, Pageable pr);
-    Long countByUserId(Long userId);
+    List<PlaylistVo> getAllByUuid(@Param("searchUser") String searchUser, @Param("searchedUser") String searchedUser, Pageable pr);
+    Long countByUuid(String uuid);
 
 }

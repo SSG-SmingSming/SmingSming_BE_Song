@@ -32,15 +32,15 @@ public class SongLikesServiceImpl implements ISongLikesService{
     // 음원 좋아요 추가, 한 번 더 실행 시 취소
     @Override
     public String addSongLikes(Long songId, HttpServletRequest request) {
-        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
 
         SongEntity song = iSongRepository.getById(songId);
-        SongLikesEntity songLikes = iSongLikesRepository.findByUserIdAndSongEntityId(userId, song.getId());
+        SongLikesEntity songLikes = iSongLikesRepository.findByUuidAndSongEntityId(uuid, song.getId());
 
         if(songLikes == null) {
 
             SongLikesEntity songLikesEntity = SongLikesEntity.builder()
-                    .userId(userId)
+                    .uuid(uuid)
                     .songEntity(song).build();
 
             iSongLikesRepository.save(songLikesEntity);
@@ -55,8 +55,8 @@ public class SongLikesServiceImpl implements ISongLikesService{
 
     // 좋아요한 음원 목록 조회
     @Override
-    public List<SongLikesResVo> getSongLikes(Long userId) {
-        Iterable<SongLikesEntity> songLikes = iSongLikesRepository.findAllByUserId(userId);
+    public List<SongLikesResVo> getSongLikes(String uuid) {
+        Iterable<SongLikesEntity> songLikes = iSongLikesRepository.findAllByUuid(uuid);
 
         List<SongLikesResVo> result = new ArrayList<>();
 
@@ -75,7 +75,7 @@ public class SongLikesServiceImpl implements ISongLikesService{
 
         Optional<SongLikesEntity> likes = iSongLikesRepository.findById(songLikesDeleteReqVo.getId());
 
-        if(likes.isPresent() && likes.get().getUserId().equals(songLikesDeleteReqVo.getUserId())) {
+        if(likes.isPresent() && likes.get().getUuid().equals(songLikesDeleteReqVo.getUuid())) {
             iSongLikesRepository.deleteById(songLikesDeleteReqVo.getId());
             return true;
         }

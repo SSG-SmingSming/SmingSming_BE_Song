@@ -5,15 +5,12 @@ import com.smingsming.song.entity.playlist.entity.PlaylistLikesEntity;
 import com.smingsming.song.entity.playlist.repository.IPlaylistLikesRepository;
 import com.smingsming.song.entity.playlist.repository.IPlaylistRepository;
 import com.smingsming.song.entity.playlist.vo.PlaylistLikesDeleteReqVo;
-import com.smingsming.song.entity.playlist.vo.PlaylistLikesResVo;
 import com.smingsming.song.entity.playlist.vo.PlaylistVo;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,14 +27,14 @@ public class PlaylistLikesServiceImpl implements IPlaylistLikesService{
     @Override
     public String addPlaylistLikes(Long  playlistId, HttpServletRequest request) {
 
-        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
 
         PlaylistEntity playlistEntity = iPlaylistRepository.findById(playlistId).orElseThrow();
-        PlaylistLikesEntity playlistLikes = iPlaylistLikesRepository.findByUserIdAndPlaylistEntityId(userId, playlistEntity.getId());
+        PlaylistLikesEntity playlistLikes = iPlaylistLikesRepository.findByUuidAndPlaylistEntityId(uuid, playlistEntity.getId());
 
         if (playlistLikes == null) {
             PlaylistLikesEntity addLikes = PlaylistLikesEntity.builder()
-                    .userId(userId)
+                    .uuid(uuid)
                     .playlistEntity(playlistEntity).build();
 
             iPlaylistLikesRepository.save(addLikes);
@@ -53,10 +50,10 @@ public class PlaylistLikesServiceImpl implements IPlaylistLikesService{
 
     // 좋아요한 플레이리스트 조회
     @Override
-    public List<PlaylistVo> getPlaylistLikes(Long userId, HttpServletRequest request) {
+    public List<PlaylistVo> getPlaylistLikes(String uuid, HttpServletRequest request) {
 
-        Long searchUser = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
-        List<PlaylistVo> playlistLikes = iPlaylistLikesRepository.getAllByUserId(searchUser, userId);
+        String searchUser = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
+        List<PlaylistVo> playlistLikes = iPlaylistLikesRepository.getAllByUuid(searchUser, uuid);
 
         return playlistLikes;
     }
@@ -66,7 +63,7 @@ public class PlaylistLikesServiceImpl implements IPlaylistLikesService{
     public boolean deletePlaylistLikes(PlaylistLikesDeleteReqVo playlistLikesDeleteReqVo) {
         Optional<PlaylistLikesEntity> likes = iPlaylistLikesRepository.findById(playlistLikesDeleteReqVo.getId());
 
-        if(likes.isPresent() && likes.get().getUserId().equals(playlistLikesDeleteReqVo.getUserId())) {
+        if(likes.isPresent() && likes.get().getUuid().equals(playlistLikesDeleteReqVo.getUuid())) {
             iPlaylistLikesRepository.deleteById(playlistLikesDeleteReqVo.getId());
             return true;
         }

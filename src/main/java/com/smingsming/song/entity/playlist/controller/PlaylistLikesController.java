@@ -2,7 +2,6 @@ package com.smingsming.song.entity.playlist.controller;
 
 import com.smingsming.song.entity.playlist.service.IPlaylistLikesService;
 import com.smingsming.song.entity.playlist.vo.PlaylistLikesDeleteReqVo;
-import com.smingsming.song.entity.playlist.vo.PlaylistLikesResVo;
 import com.smingsming.song.entity.playlist.vo.PlaylistVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,9 +30,9 @@ public class PlaylistLikesController {
 
 
     // 좋아요한 플레이리스트 조회
-    @GetMapping(value = "/get/{userId}")
-    public ResponseEntity<?> getPlaylistLikes(@PathVariable(value = "userId") Long userId, HttpServletRequest request) {
-        List<PlaylistVo> result = iPlaylistLikesService.getPlaylistLikes(userId, request);
+    @GetMapping(value = "/get/{uuid}")
+    public ResponseEntity<?> getPlaylistLikes(@PathVariable(value = "uuid") String uuid, HttpServletRequest request) {
+        List<PlaylistVo> result = iPlaylistLikesService.getPlaylistLikes(uuid, request);
 
         if(result.size() != 0)
             return ResponseEntity.status(HttpStatus.OK).body(result);

@@ -26,7 +26,7 @@ public class SongEntity {
     @Column(name = "is_formal")
     private boolean formal;
 
-    private Long userId;
+    private String uuid;
 
     private String songUri;
 

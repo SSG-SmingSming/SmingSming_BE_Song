@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface IArtistService {
     ArtistEntity addArtist(ArtistAddReqVo artistVo);
-    boolean updateArtist(Long artistId, String artistThumbnail);
+    boolean updateArtist(Long artistId, ArtistVo artistVo);
     boolean deleteArtist(Long artistId);
     ArtistVo getArtist(Long artistId);
     List<ArtistVo> artistSearch(String keyWord, int page);

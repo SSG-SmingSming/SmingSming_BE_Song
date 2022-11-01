@@ -86,11 +86,11 @@ public class AlbumServiceImpl implements IAlbumService{
     // 앨범 상세 정보 조회
     @Override
     public AlbumDetailVo getAlbumDetail(Long albumId, HttpServletRequest request) {
-        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
 
         AlbumEntity album = iAlbumRepository.findById(albumId).orElseThrow();
 
-        List<SongVo> songList = iSongRepository.findAllByAlbumEntityId(userId, albumId);
+        List<SongVo> songList = iSongRepository.findAllByAlbumEntityId(uuid, albumId);
 
         AlbumDetailVo returnVo = AlbumDetailVo.builder()
                 .albumId(album.getId())

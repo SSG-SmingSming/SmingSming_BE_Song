@@ -19,7 +19,7 @@ public class PlaylistLikesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
+    private String uuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "playlistEntity_id")
@@ -28,9 +28,9 @@ public class PlaylistLikesEntity {
 
 
     @Builder
-    public PlaylistLikesEntity(Long id, Long userId, PlaylistEntity playlistEntity) {
+    public PlaylistLikesEntity(Long id, String uuid, PlaylistEntity playlistEntity) {
         this.id = id;
-        this.userId = userId;
+        this.uuid = uuid;
         this.playlistEntity = playlistEntity;
     }
 }

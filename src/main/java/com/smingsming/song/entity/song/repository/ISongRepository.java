@@ -25,7 +25,7 @@ public interface ISongRepository extends JpaRepository<SongEntity, Long> {
 
 
     @Query(value = "select new com.smingsming.song.entity.song.vo.SongVo(" +
-            " s.id, s.userId, album.id, artist.name, album.albumThumbnail, " +
+            " s.id, s.uuid, album.id, artist.name, album.albumThumbnail, " +
             " s.songName, s.songUri, " +
             " case when sl.id is not null then true else false end, " +
             " s.formal " +
@@ -33,15 +33,15 @@ public interface ISongRepository extends JpaRepository<SongEntity, Long> {
             " from SongEntity s" +
             " left join AlbumEntity album on s.albumEntity.id = album.id " +
             " left join ArtistEntity artist on s.artist.id = artist.id " +
-            " left join SongLikesEntity sl on s.id = sl.songEntity.id and sl.userId = :userId " +
+            " left join SongLikesEntity sl on s.id = sl.songEntity.id and sl.uuid = :uuid " +
             " where s.songName like :keyword " +
             " or album.title like :keyword " +
             " or artist.name like :keyword "
     )
-    List<SongVo> getSongListByKeyword(Pageable pr, @Param("keyword") String keyword, @Param("userId") Long userId);
+    List<SongVo> getSongListByKeyword(Pageable pr, @Param("keyword") String keyword, @Param("uuid") String uuid);
 
     @Query(value = "select new com.smingsming.song.entity.song.vo.SongVo(" +
-            " s.id, s.userId, album.id, artist.name, album.albumThumbnail, " +
+            " s.id, s.uuid, album.id, artist.name, album.albumThumbnail, " +
             " s.songName, s.songUri, " +
             " case when sl.id is not null then true else false end, " +
             " s.formal " +
@@ -49,13 +49,13 @@ public interface ISongRepository extends JpaRepository<SongEntity, Long> {
             " from SongEntity s" +
             " left join AlbumEntity album on s.albumEntity.id = album.id " +
             " left join ArtistEntity artist on s.artist.id = artist.id " +
-            " left join SongLikesEntity sl on s.id = sl.songEntity.id and sl.userId = :userId " +
+            " left join SongLikesEntity sl on s.id = sl.songEntity.id and sl.uuid = :uuid " +
             " where s.albumEntity.id = :albumId "
     )
-    List<SongVo> findAllByAlbumEntityId(@Param("userId") Long userId, @Param("albumId") Long albumId);
+    List<SongVo> findAllByAlbumEntityId(@Param("uuid") String uuid, @Param("albumId") Long albumId);
 
     @Query(value = "select new com.smingsming.song.entity.song.vo.SongVo(" +
-            " s.id, s.userId, album.id, artist.name, album.albumThumbnail, " +
+            " s.id, s.uuid, album.id, artist.name, album.albumThumbnail, " +
             " s.songName, s.songUri, " +
             " case when sl.id is not null then true else false end, " +
             " s.formal " +
@@ -63,13 +63,13 @@ public interface ISongRepository extends JpaRepository<SongEntity, Long> {
             " from SongEntity s" +
             " left join AlbumEntity album on s.albumEntity.id = album.id " +
             " left join ArtistEntity artist on s.artist.id = artist.id " +
-            " left join SongLikesEntity sl on s.id = sl.songEntity.id and sl.userId = :userId " +
+            " left join SongLikesEntity sl on s.id = sl.songEntity.id and sl.uuid = :uuid " +
             " where s.artist.id = :artistId "
     )
-    List<SongVo> findAllByArtistId(@Param("userId") Long userId, @Param("artistId") Long artistId, Pageable pr);
+    List<SongVo> findAllByArtistId(@Param("uuid") String uuid, @Param("artistId") Long artistId, Pageable pr);
 
     @Query(value = "select new com.smingsming.song.entity.song.vo.SongVo(" +
-            " s.id, s.userId, album.id, artist.name, album.albumThumbnail, " +
+            " s.id, s.uuid, album.id, artist.name, album.albumThumbnail, " +
             " s.songName, s.songUri, " +
             " case when sl.id is not null then true else false end, " +
             " s.formal " +
@@ -77,11 +77,11 @@ public interface ISongRepository extends JpaRepository<SongEntity, Long> {
             " from SongEntity s " +
             " left join AlbumEntity album on s.albumEntity.id = album.id " +
             " left join ArtistEntity artist on s.artist.id = artist.id " +
-            " left join SongLikesEntity sl on s.id = sl.songEntity.id and sl.userId = :searchUser " +
+            " left join SongLikesEntity sl on s.id = sl.songEntity.id and sl.uuid = :searchUser " +
             " where s.formal = false  " +
-            " and s.userId = :searchedUser "
+            " and s.uuid = :searchedUser "
     )
-    List<SongVo> getAllByIsFormalAndSongId(@Param("searchUser") Long searchUser, @Param("searchedUser") Long searchedUser);
+    List<SongVo> getAllByIsFormalAndSongId(@Param("searchUser") String searchUser, @Param("searchedUser") String searchedUser);
 
 //
 //    @Query(value = "select new com.smingsming.song.entity.song.vo.SongVo(" +

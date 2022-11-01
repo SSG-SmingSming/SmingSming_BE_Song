@@ -28,4 +28,5 @@ public interface IAlbumRepository extends JpaRepository<AlbumEntity, Long> {
     List<AlbumEntity> getAlbumListByKeyword(Pageable pr, @Param("keyword") String keyword);
 
     List<AlbumEntity> findAllByArtist_Id(Pageable ap, Long artistId);
+    AlbumEntity findByUuid(String uuid);
 }

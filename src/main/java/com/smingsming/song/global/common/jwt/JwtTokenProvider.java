@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-@RequiredArgsConstructor
-@Component
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
     @Value("${token.secret}")
     private String secretKey;
@@ -25,8 +25,10 @@ public class JwtTokenProvider {
 
 
     // JWT 토큰 생성
-    public String createToken(Long userPk) { // 로그인 후 user 기본키를 토큰으로 프론트에게 넘겨줌
+    public String createToken(Long userPk, String uuid) { // 로그인 후 user 기본키를 토큰으로 프론트에게 넘겨줌
         Claims claims = Jwts.claims().setSubject(userPk.toString()); // JWT payload 에 저장되는 정보단위, 보통 여기서 user를 식별하는 값을 넣는다.
+        claims.put("uuid", uuid);
+
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
@@ -37,10 +39,20 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    //토큰에서 Claim 추출
+    private Claims getClaimsFormToken(String token){
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+    }
 
     // 토큰에서 회원 정보 추출
     public String getUserPk(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    // uuid 추출
+    public String getUuid(String token) {
+        String Uuid = (String) getClaimsFormToken(token).get("uuid");
+        return Uuid;
     }
 
     // Request의 Header에서 token 값을 가져옵니다. "Authorization" : "TOKEN값'

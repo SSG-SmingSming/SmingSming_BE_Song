@@ -25,7 +25,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ArtistServicIempl implements IArtistService{
+public class ArtistServiceImpl implements IArtistService{
 
     private final IArtistRepository iArtistRepository;
     private final IAlbumRepository iAlbumRepository;
@@ -64,7 +64,6 @@ public class ArtistServicIempl implements IArtistService{
 
         Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
 
-
         List<AlbumEntity> albumList = iAlbumRepository.findAllByArtist_Id(pr, artistId);
 
         List<AlbumVo> returnVo = new ArrayList<>();
@@ -86,10 +85,10 @@ public class ArtistServicIempl implements IArtistService{
     @Override
     public List<SongVo> getSongByArtist(Long artistId, int page, HttpServletRequest request) {
 
-        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
         Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
 
-        List<SongVo> songList = iSongRepository.findAllByArtistId(userId, artistId, pr);
+        List<SongVo> songList = iSongRepository.findAllByArtistId(uuid, artistId, pr);
 
         return songList;
     }
@@ -116,11 +115,11 @@ public class ArtistServicIempl implements IArtistService{
     // 아티스트 정보 수정
     @Override
     @Transactional
-    public boolean updateArtist(Long artistId, String artistThumbnail) {
+    public boolean updateArtist(Long artistId, ArtistVo artistVo) {
 
         ArtistEntity artistEntity = iArtistRepository.findById(artistId).orElseThrow();
 
-        artistEntity.updateThumbnail(artistThumbnail);
+        artistEntity.updateThumbnail(artistVo.getArtistThumbnail());
 
         return true;
     }

@@ -13,6 +13,6 @@ public class PlaylistVo {
     Long id;
     String playlistName;
     String playlistThumbnail;
-    Long userId;
+    String uuid;
     boolean playlistLike;
 }
