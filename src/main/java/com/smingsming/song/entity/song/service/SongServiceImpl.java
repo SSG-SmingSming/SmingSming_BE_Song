@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -168,19 +169,37 @@ public class SongServiceImpl implements ISongService {
         return returnVo;
     }
 
+//    @Override
+//    public List<SongVo> songSearch(String keyword, int page, HttpServletRequest request) {
+//
+//        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
+//
+//        List<SongVo> songList = new ArrayList<>();
+//        Pageable pr = PageRequest.of(page - 1 , 20, Sort.by("id").descending());
+//
+//        keyword = "%" + keyword + "%";
+//
+//        songList = iSongRepository.getSongListByKeyword(pr, keyword, uuid);
+//
+//        return songList;
+//    }
+
     @Override
-    public List<SongVo> songSearch(String keyword, int page, HttpServletRequest request) {
-
+    public SongSearchVo songSearch(String keyword, int page, HttpServletRequest request) {
         String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
+//        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        System.out.println(keyword);
 
-        List<SongVo> songList = new ArrayList<>();
-        Pageable pr = PageRequest.of(page - 1 , 20, Sort.by("id").descending());
+        Pageable pr = PageRequest.of(page - 1 , 10, Sort.by("id").descending());
 
         keyword = "%" + keyword + "%";
 
-        songList = iSongRepository.getSongListByKeyword(pr, keyword, uuid);
+        Page<SongVo> songList = iSongRepository.test(pr, keyword, uuid);
 
-        return songList;
+        return SongSearchVo.builder()
+                .count((int) songList.getTotalElements())
+                .result(songList.getContent())
+                .build();
     }
 
     @Override
@@ -188,11 +207,11 @@ public class SongServiceImpl implements ISongService {
 
         String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
 
-        Pageable pr = PageRequest.of(page - 1 , 20, Sort.by("id").descending());
+        Pageable pr = PageRequest.of(page - 1 , 10, Sort.by("id").descending());
 
         ModelMapper mapper = new ModelMapper();
 
-        List<ArtistEntity> artistList = iArtistRepository.findAllByNameContains(pr, keyword);
+        Page<ArtistEntity> artistList = iArtistRepository.findAllByNameContains(pr, keyword);
         List<ArtistVo> artistVoList = new ArrayList<>();
 
         artistList.forEach(v -> {
@@ -203,7 +222,7 @@ public class SongServiceImpl implements ISongService {
 
         keyword = "%" + keyword + "%";
 
-        List<AlbumEntity> albumList = iAlbumRepository.getAlbumListByKeyword(pr, keyword);
+        Page<AlbumEntity> albumList = iAlbumRepository.getAlbumListByKeyword(pr, keyword);
         List<AlbumVo> albumVoList = new ArrayList<>();
 
         albumList.forEach(v -> {

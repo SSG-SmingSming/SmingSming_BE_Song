@@ -4,6 +4,7 @@ import com.smingsming.song.entity.album.vo.AlbumVo;
 import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import com.smingsming.song.entity.artist.service.IArtistService;
+import com.smingsming.song.entity.artist.vo.ArtistSearchVo;
 import com.smingsming.song.entity.artist.vo.ArtistVo;
 import com.smingsming.song.entity.song.vo.SongVo;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ public class ArtistController {
     @GetMapping(value = "/search")
     public ResponseEntity<?> artistSearch(@RequestParam(name = "keyword",defaultValue = "") String keyword,
                                           @RequestParam(name = "page", defaultValue = "1") int page) {
-        List<ArtistVo> result = iArtistService.artistSearch(keyword, page);
+        ArtistSearchVo result = iArtistService.artistSearch(keyword, page);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

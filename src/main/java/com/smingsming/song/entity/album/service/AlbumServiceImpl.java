@@ -1,11 +1,8 @@
 package com.smingsming.song.entity.album.service;
 
 import com.smingsming.song.entity.album.entity.AlbumEntity;
-import com.smingsming.song.entity.album.vo.AlbumAddReqVo;
+import com.smingsming.song.entity.album.vo.*;
 import com.smingsming.song.entity.album.repository.IAlbumRepository;
-import com.smingsming.song.entity.album.vo.AlbumDetailVo;
-import com.smingsming.song.entity.album.vo.AlbumUpdateReqVo;
-import com.smingsming.song.entity.album.vo.AlbumVo;
 import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.repository.IArtistRepository;
 import com.smingsming.song.entity.song.repository.ISongRepository;
@@ -13,6 +10,7 @@ import com.smingsming.song.entity.song.vo.SongVo;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -63,11 +61,11 @@ public class AlbumServiceImpl implements IAlbumService{
 
     // 앨범 검색
     @Override
-    public List<AlbumVo> albumSearch(String keyword, int page) {
-        Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
+    public AlbumSearchVo albumSearch(String keyword, int page) {
+        Pageable pr = PageRequest.of(page - 1, 10, Sort.by("id").descending());
         keyword = "%" + keyword.trim() + "%";
 
-        List<AlbumEntity> albumList = iAlbumRepository.getAlbumListByKeyword(pr, keyword);
+        Page<AlbumEntity> albumList = iAlbumRepository.getAlbumListByKeyword(pr, keyword);
         List<AlbumVo> returnVo = new ArrayList<>();
 
         albumList.forEach(v -> {
@@ -80,7 +78,9 @@ public class AlbumServiceImpl implements IAlbumService{
                     .build());
         });
 
-        return returnVo;
+        return AlbumSearchVo.builder()
+                .count((int) albumList.getTotalElements())
+                .result(returnVo).build();
     }
 
     // 앨범 상세 정보 조회

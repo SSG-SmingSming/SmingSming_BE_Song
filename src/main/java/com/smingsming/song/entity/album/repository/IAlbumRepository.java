@@ -1,6 +1,7 @@
 package com.smingsming.song.entity.album.repository;
 
 import com.smingsming.song.entity.album.entity.AlbumEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,10 +23,16 @@ public interface IAlbumRepository extends JpaRepository<AlbumEntity, Long> {
 //            " or artist.name like :keyword "
 //    )
 
+//    @Query(value = " select a from AlbumEntity a " +
+//            " where a.title like :keyword" +
+//            " or a.artist.name like :keyword ")
+//    List<AlbumEntity> getAlbumListByKeyword(Pageable pr, @Param("keyword") String keyword);
+
     @Query(value = " select a from AlbumEntity a " +
             " where a.title like :keyword" +
             " or a.artist.name like :keyword ")
-    List<AlbumEntity> getAlbumListByKeyword(Pageable pr, @Param("keyword") String keyword);
+    Page<AlbumEntity> getAlbumListByKeyword(Pageable pr, @Param("keyword") String keyword);
+
 
     List<AlbumEntity> findAllByArtist_Id(Pageable ap, Long artistId);
     AlbumEntity findByUuid(String uuid);

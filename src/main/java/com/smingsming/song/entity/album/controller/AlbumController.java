@@ -1,11 +1,8 @@
 package com.smingsming.song.entity.album.controller;
 
 import com.smingsming.song.entity.album.entity.AlbumEntity;
-import com.smingsming.song.entity.album.vo.AlbumAddReqVo;
+import com.smingsming.song.entity.album.vo.*;
 import com.smingsming.song.entity.album.service.IAlbumService;
-import com.smingsming.song.entity.album.vo.AlbumDetailVo;
-import com.smingsming.song.entity.album.vo.AlbumUpdateReqVo;
-import com.smingsming.song.entity.album.vo.AlbumVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +43,7 @@ public class AlbumController {
     @GetMapping(value = "/search")
     public ResponseEntity<?> searchAlbum(@RequestParam(name = "keyword", defaultValue = "") String keyword,
                                          @RequestParam(name = "page", defaultValue = "1") int page) {
-        List<AlbumVo> result = iAlbumService.albumSearch(keyword, page);
+        AlbumSearchVo result = iAlbumService.albumSearch(keyword, page);
 
         if(result != null)
             return ResponseEntity.status(HttpStatus.OK).body(result);

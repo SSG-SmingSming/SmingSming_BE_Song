@@ -12,6 +12,7 @@ import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,6 +41,10 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
         String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
 
+        if(uuid == null) {
+            return null;
+        }
+
         ModelMapper mapper = new ModelMapper();
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -60,7 +65,7 @@ public class PlaylistServiceImpl implements IPlaylistService {
     public List<PlaylistVo> getPlaylist(String searchedUser, int page, HttpServletRequest request) {
         String searchUser = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
 
-        Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
+        Pageable pr = PageRequest.of(page - 1, 15, Sort.by("id").descending());
 
         List<PlaylistVo> playlist = iPlaylistRepository.getAllByUuid(searchUser, searchedUser, pr);
 
@@ -146,15 +151,17 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     // 플레이리스트 검색
     @Override
-    public List<PlaylistVo> playlistSearch(String keyword, int page) {
+    public PlaylistSearchVo playlistSearch(String keyword, int page, HttpServletRequest request) {
 
-        Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
+        Pageable pr = PageRequest.of(page - 1, 10, Sort.by("id").descending());
 
         keyword = "%" + keyword + "%";
 
-        List<PlaylistVo> result = iPlaylistRepository.findAllByTitleContains(keyword, pr);
+        Page<PlaylistVo> result = iPlaylistRepository.findAllByTitleContains(keyword, pr);
 
-        return result;
+        return PlaylistSearchVo.builder()
+                .count(result.getTotalElements())
+                .result(result.getContent()).build();
     }
 
     // 플레이리스트 갯수 집계
@@ -174,29 +181,27 @@ public class PlaylistServiceImpl implements IPlaylistService {
     public PlaylistDetailVo getPlaylistTrack(Long playlistId, HttpServletRequest request) {
 
         String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
-        PlaylistEntity playlist = iPlaylistRepository.findById(playlistId).orElseThrow();
+//        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+//        PlaylistEntity playlist = iPlaylistRepository.findById(playlistId).orElseThrow();
+        PlaylistVo playlist = iPlaylistRepository.getByIdWithLike(uuid, playlistId);
 
-        List<PlaylistTrackEntity> trackList = iPlaylistTrackRepository.findAllByPlaylistId(playlistId);
+        List<PlaylistTrackVo> trackList = iPlaylistTrackRepository.findAllByPlaylistId(playlistId);
 
-        List<PlaylistTrackVo> trackVoList = new ArrayList<>();
-
-        trackList.forEach(v -> {
-
-            trackVoList.add(PlaylistTrackVo.builder()
-                    .id(v.getId())
-                    .songId(v.getSongId())
-                    .playlistId(v.getPlaylistId())
-                    .build());
-                });
-
-        PlaylistDetailVo detailVo = PlaylistDetailVo.builder()
+        return PlaylistDetailVo.builder()
                 .playlistId(playlistId)
-                .name(playlist.getTitle())
+                .name(playlist.getPlaylistName())
                 .thumbnail(playlist.getPlaylistThumbnail())
-                .trackList(trackVoList)
+                .isLike(playlist.isPlaylistLike())
+                .trackList(trackList)
+                .userId(playlist.getUserId())
                 .build();
 
-        return detailVo;
+//        return detailVo;
+    }
+
+    @Override
+    public PlaylistEntity getPlaylistById(Long id) {
+        return iPlaylistRepository.findById(id).orElseThrow();
     }
 
     // 플레이리스트 내 수록곡 삭제

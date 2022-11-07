@@ -12,6 +12,7 @@ public interface ISongService {
     boolean customSongDelete(Long id, HttpServletRequest request);
     SongVo songPlay(Long id, HttpServletRequest request);
     List<SongVo> customSongGet(String uuid, HttpServletRequest request);
-    List<SongVo> songSearch(String keyWord, int page, HttpServletRequest request);
+//    List<SongVo> songSearch(String keyWord, int page, HttpServletRequest request);
+    SongSearchVo songSearch(String keyWord, int page, HttpServletRequest request);
     SearchResultVo totalSearch(String keyword, int page, HttpServletRequest request);
 }

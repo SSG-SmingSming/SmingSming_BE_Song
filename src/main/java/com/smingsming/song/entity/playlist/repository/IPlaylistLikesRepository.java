@@ -21,5 +21,9 @@ public interface IPlaylistLikesRepository extends JpaRepository<PlaylistLikesEnt
             " from PlaylistLikesEntity pl " +
             " left join PlaylistLikesEntity  pl2 on pl.playlistEntity.id = pl2.playlistEntity.id and pl2.uuid = :searchUser " +
             " where pl.uuid = :searchedUser ")
+
     List<PlaylistVo> getAllByUuid(@Param("searchUser") String searchUser, @Param("searchedUser") String searchedUser);
+//            " left join PlaylistLikesEntity  pl2 on pl.playlistEntity.id = pl2.playlistEntity.id and pl2.userId = :searchUser " +
+//                    " where pl.userId = :searchedUser ")
+//    List<PlaylistVo> getAllByUserId(@Param("searchUser") Long userId, @Param("searchedUser") Long userId2);
 }

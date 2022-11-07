@@ -37,20 +37,26 @@ public class PlaylistController {
                                          HttpServletRequest request) {
         List<PlaylistVo> result = iPlaylistService.getPlaylist(uuid, page, request);
 
-        if(result != null)
-            return ResponseEntity.status(HttpStatus.OK).body(result);
-        else
-            return ResponseEntity.status(HttpStatus.OK).body(false);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+//        if(result != null)
+//            return ResponseEntity.status(HttpStatus.OK).body(result);
+//        else
+//            return ResponseEntity.status(HttpStatus.OK).body(false);
     }
 
     // 플레이리스트 검색
     @GetMapping(value = "/search")
-    public ResponseEntity<?> searchPlaylist(@RequestParam(name = "keyword") String keyword, int page) {
-        List<PlaylistVo> result = iPlaylistService.playlistSearch(keyword, page);
+    public ResponseEntity<?> searchPlaylist(@RequestParam(name = "keyword") String keyword, int page, HttpServletRequest request) {
+        PlaylistSearchVo result = iPlaylistService.playlistSearch(keyword, page, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @GetMapping("/get/id/{playlistId}")
+    public ResponseEntity<?> getPlaylist(@PathVariable(name = "playlistId") Long playlistId) {
+        PlaylistEntity playlistEntity = iPlaylistService.getPlaylistById(playlistId);
+        return ResponseEntity.status(HttpStatus.OK).body(playlistEntity);
+    }
 
     // 플레이리스트 정보 수정
     @PutMapping(value = "/update")

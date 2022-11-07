@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Data
+@Builder
 @Entity
 @Table(name = "playlist")
 @AllArgsConstructor

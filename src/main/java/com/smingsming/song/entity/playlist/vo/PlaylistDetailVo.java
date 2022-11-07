@@ -16,6 +16,8 @@ public class PlaylistDetailVo {
     private Long playlistId;
     private String name;
     private String thumbnail;
+    private boolean isLike;
+    private String userId;
 
     List<PlaylistTrackVo> trackList;
 

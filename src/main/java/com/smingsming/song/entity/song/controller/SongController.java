@@ -59,7 +59,7 @@ public class SongController {
     public ResponseEntity<?> songSearch(@RequestParam(defaultValue = "") String keyword,
                                         @RequestParam(name = "page", defaultValue = "1") int page,
                                         HttpServletRequest request) {
-        List<SongVo> result = iSongService.songSearch(keyword, page, request);
+        SongSearchVo result = iSongService.songSearch(keyword, page, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

@@ -8,5 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IArtistRepository extends JpaRepository<ArtistEntity, Long> {
-    List<ArtistEntity> findAllByNameContains(Pageable pr, String keyword);
+//    List<ArtistEntity> findAllByNameContains(Pageable pr, String keyword);
+    Page<ArtistEntity> findAllByNameContains(Pageable pr, String keyword);
 }

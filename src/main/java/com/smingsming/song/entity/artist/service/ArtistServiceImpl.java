@@ -6,12 +6,14 @@ import com.smingsming.song.entity.album.vo.AlbumVo;
 import com.smingsming.song.entity.artist.entity.ArtistEntity;
 import com.smingsming.song.entity.artist.vo.ArtistAddReqVo;
 import com.smingsming.song.entity.artist.repository.IArtistRepository;
+import com.smingsming.song.entity.artist.vo.ArtistSearchVo;
 import com.smingsming.song.entity.artist.vo.ArtistVo;
 import com.smingsming.song.entity.song.repository.ISongRepository;
 import com.smingsming.song.entity.song.vo.SongVo;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -62,7 +64,7 @@ public class ArtistServiceImpl implements IArtistService{
     @Override
     public List<AlbumVo> getAlbumByArtist(Long artistId, int page) {
 
-        Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
+        Pageable pr = PageRequest.of(page - 1, 10, Sort.by("id").descending());
 
         List<AlbumEntity> albumList = iAlbumRepository.findAllByArtist_Id(pr, artistId);
 
@@ -86,7 +88,9 @@ public class ArtistServiceImpl implements IArtistService{
     public List<SongVo> getSongByArtist(Long artistId, int page, HttpServletRequest request) {
 
         String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
-        Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
+
+//        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+        Pageable pr = PageRequest.of(page - 1, 10, Sort.by("id").descending());
 
         List<SongVo> songList = iSongRepository.findAllByArtistId(uuid, artistId, pr);
 
@@ -95,11 +99,11 @@ public class ArtistServiceImpl implements IArtistService{
 
     // 아티스트 검색
     @Override
-    public List<ArtistVo> artistSearch(String keyword, int page) {
+    public ArtistSearchVo artistSearch(String keyword, int page) {
 
-        Pageable pr = PageRequest.of(page - 1, 20, Sort.by("id").descending());
+        Pageable pr = PageRequest.of(page - 1, 10, Sort.by("id").descending());
         keyword = keyword.strip();
-        List<ArtistEntity> artistList = iArtistRepository.findAllByNameContains(pr, keyword);
+        Page<ArtistEntity> artistList = iArtistRepository.findAllByNameContains(pr, keyword);
 
         ModelMapper mapper = new ModelMapper();
         List<ArtistVo> returnVo = new ArrayList<>();
@@ -109,7 +113,9 @@ public class ArtistServiceImpl implements IArtistService{
         });
 
 
-        return returnVo;
+        return ArtistSearchVo.builder()
+                .count((int) artistList.getTotalElements())
+                .result(returnVo).build();
     }
 
     // 아티스트 정보 수정
