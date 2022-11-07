@@ -44,6 +44,7 @@ public class SongServiceImpl implements ISongService {
     private final IPlaylistTrackRepository iPlaylistTrackRepository;
 
 
+    // 공식 음원 등록
     @Override
     public boolean formalSongAdd(FormalSongAddReqVo requestVo) {
         Optional<AlbumEntity> album = iAlbumRepository.findById(requestVo.getAlbum());
@@ -67,6 +68,7 @@ public class SongServiceImpl implements ISongService {
         return true;
     }
 
+    // 사용자 음원 등록
     @Override
     public boolean customSongAdd(CustomSongAddReqVo requestVo, HttpServletRequest request) {
         String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
@@ -93,6 +95,7 @@ public class SongServiceImpl implements ISongService {
         return true;
     }
 
+    // 사용자 음원 목록 조회
     @Override
     public List<SongVo> customSongGet(String searchedUser, HttpServletRequest request) {
         String searchUser = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
@@ -118,6 +121,7 @@ public class SongServiceImpl implements ISongService {
         return returnVo;
     }
 
+    // 공식 음원 삭제
     @Override
     @Transactional
     public boolean songDelete(Long id) {
@@ -129,6 +133,7 @@ public class SongServiceImpl implements ISongService {
         return true;
     }
 
+    // 사용자 등록 음원 삭제
     @Override
     public boolean customSongDelete(Long id, HttpServletRequest request) {
         String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
@@ -143,6 +148,7 @@ public class SongServiceImpl implements ISongService {
         return false;
     }
 
+    // 음원 재생
     @Override
     public SongVo songPlay(Long songId, HttpServletRequest request) {
         String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
@@ -169,6 +175,7 @@ public class SongServiceImpl implements ISongService {
         return returnVo;
     }
 
+
 //    @Override
 //    public List<SongVo> songSearch(String keyword, int page, HttpServletRequest request) {
 //
@@ -184,6 +191,7 @@ public class SongServiceImpl implements ISongService {
 //        return songList;
 //    }
 
+    // 음원 검색
     @Override
     public SongSearchVo songSearch(String keyword, int page, HttpServletRequest request) {
         String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
@@ -202,6 +210,7 @@ public class SongServiceImpl implements ISongService {
                 .build();
     }
 
+    // 전체 검색
     @Override
     public SearchResultVo totalSearch(String keyword, int page, HttpServletRequest request) {
 
