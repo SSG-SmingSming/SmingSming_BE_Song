@@ -37,9 +37,9 @@ public class PlaylistController {
                                          HttpServletRequest request) {
         List<PlaylistVo> result = iPlaylistService.getPlaylist(uuid, page, request);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+//        return ResponseEntity.status(HttpStatus.OK).body(result);
 //        if(result != null)
-//            return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
 //        else
 //            return ResponseEntity.status(HttpStatus.OK).body(false);
     }

@@ -34,10 +34,7 @@ public class PlaylistLikesController {
     public ResponseEntity<?> getPlaylistLikes(@PathVariable(value = "uuid") String uuid, HttpServletRequest request) {
         List<PlaylistVo> result = iPlaylistLikesService.getPlaylistLikes(uuid, request);
 
-        if(result.size() != 0)
-            return ResponseEntity.status(HttpStatus.OK).body(result);
-        else
-            return ResponseEntity.status(HttpStatus.OK).body(false);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     // 플레이리스트 좋아요 취소

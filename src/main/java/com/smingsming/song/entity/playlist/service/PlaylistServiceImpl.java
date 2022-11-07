@@ -69,10 +69,7 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
         List<PlaylistVo> playlist = iPlaylistRepository.getAllByUuid(searchUser, searchedUser, pr);
 
-        if (!playlist.isEmpty()) {
-            return playlist;
-        }
-        return null;
+        return playlist;
     }
 
     // 플레이리스트 정보 수정

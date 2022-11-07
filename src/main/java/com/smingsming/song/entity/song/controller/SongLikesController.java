@@ -38,10 +38,8 @@ public class SongLikesController {
     public ResponseEntity<?> getPlaylistLikes(@PathVariable(value = "uuid") String uuid) {
         List<SongLikesResVo> result = iSongLikesService.getSongLikes(uuid);
 
-        if(result.size() != 0)
-            return ResponseEntity.status(HttpStatus.OK).body(result);
-        else
-            return ResponseEntity.status(HttpStatus.OK).body(false);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+//        return ResponseEntity.status(HttpStatus.OK).body(false);
     }
 
     // 음원 좋아요 취소
