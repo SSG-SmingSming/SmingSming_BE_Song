@@ -141,7 +141,7 @@ public class SongServiceImpl implements ISongService {
 
         SongEntity songEntity = iSongRepository.findById(id).orElseThrow();
 
-        if(songEntity.getUuid().equals(user.getUuid())) {
+        if(songEntity.getUuid().equals(user.getId())) {
             iSongRepository.delete(songEntity);
             return true;
         }
