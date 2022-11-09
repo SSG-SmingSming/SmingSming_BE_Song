@@ -10,6 +10,7 @@ import com.smingsming.song.entity.song.vo.SongVo;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,7 @@ public class AlbumServiceImpl implements IAlbumService{
     public AlbumEntity addAlbum(AlbumAddReqVo albumVo) {
 
         ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         ArtistEntity artist = iArtistRepository.findById(albumVo.getArtistId()).orElseThrow();
         AlbumEntity mapAlbumEntity = mapper.map(albumVo, AlbumEntity.class);
         mapAlbumEntity.setArtist(artist);

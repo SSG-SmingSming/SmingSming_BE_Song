@@ -28,6 +28,7 @@ public class SongEntity {
 
     private String uuid;
 
+    @Column(length = 1000)
     private String songUri;
 
     @ManyToOne(fetch = FetchType.LAZY)
