@@ -168,7 +168,7 @@ public class SongServiceImpl implements ISongService {
         if(songEntity.isFormal()) {
             returnVo.setArtistName(songEntity.getArtist().getName());
         }else {
-            UserDetailVo user = userServiceClient.getUuid(uuid);
+            UserDetailVo user = userServiceClient.getUuid(songEntity.getUuid());
             returnVo.setArtistName(user.getNickName());
         }
 
