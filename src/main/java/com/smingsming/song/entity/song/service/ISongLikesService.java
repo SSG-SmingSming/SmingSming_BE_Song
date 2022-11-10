@@ -5,11 +5,12 @@ import com.smingsming.song.entity.song.vo.SongLikesAddReqVo;
 import com.smingsming.song.entity.song.vo.SongLikesDeleteReqVo;
 import com.smingsming.song.entity.song.vo.SongLikesResVo;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface ISongLikesService {
 
-    String addSongLikes(SongLikesAddReqVo songLikesAddReqVo);
-    List<SongLikesResVo> getSongLikes(Long Id);
+    String addSongLikes(Long songId, HttpServletRequest request);
+    List<SongLikesResVo> getSongLikes(String uuid);
     boolean deleteSongLikes(SongLikesDeleteReqVo songLikesDeleteReqVo);
 }

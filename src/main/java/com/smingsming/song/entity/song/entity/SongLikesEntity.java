@@ -18,7 +18,7 @@ public class SongLikesEntity {
     private Long id;
 
     @NotNull
-    private Long userId;
+    private String uuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "song_id")
@@ -26,9 +26,9 @@ public class SongLikesEntity {
     private SongEntity songEntity;
 
     @Builder
-    public SongLikesEntity(Long id, Long userId, SongEntity songEntity) {
+    public SongLikesEntity(Long id, String uuid, SongEntity songEntity) {
         this.id = id;
-        this.userId = userId;
+        this.uuid = uuid;
         this.songEntity = songEntity;
     }
 }

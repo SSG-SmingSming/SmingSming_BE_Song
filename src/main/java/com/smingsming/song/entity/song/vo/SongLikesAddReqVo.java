@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 public class SongLikesAddReqVo {
 
     private Long songEntityId;
-    private Long userId;
+    private String uuid;
 }

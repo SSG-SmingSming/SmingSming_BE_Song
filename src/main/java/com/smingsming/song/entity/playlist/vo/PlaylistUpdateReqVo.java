@@ -12,6 +12,6 @@ import lombok.RequiredArgsConstructor;
 public class PlaylistUpdateReqVo {
 
     private Long id;
-    private String title;
-    private String playlistThumbnail;
+    private String name;
+    private String thumbnail;
 }

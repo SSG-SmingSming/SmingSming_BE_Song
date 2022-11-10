@@ -9,11 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlaylistTrackVo {
-
-    private Long id;           // 플레이리스트 트랙 id
-    private Long songId;
-    private Long playlistId;
-    private String songUrl;
-    private String songThumbnail;
+public class PlaylistVo {
+    Long id;
+    String playlistName;
+    String playlistThumbnail;
+    String userId;
+    boolean playlistLike;
 }

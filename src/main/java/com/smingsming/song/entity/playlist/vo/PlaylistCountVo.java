@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaylistLikesAddReqVo {
+public class PlaylistCountVo {
 
-    private Long playlistEntityId;
-    private Long userId;
+    private Long playlistCount;
 }

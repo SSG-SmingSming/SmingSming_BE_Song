@@ -1,7 +1,5 @@
 package com.smingsming.song.entity.playlist.service;
 
-import com.smingsming.song.entity.album.repository.IAlbumRepository;
-import com.smingsming.song.entity.artist.repository.IArtistRepository;
 import com.smingsming.song.entity.playlist.entity.PlaylistEntity;
 import com.smingsming.song.entity.playlist.entity.PlaylistTrackEntity;
 import com.smingsming.song.entity.playlist.repository.IPlaylistRepository;
@@ -13,6 +11,11 @@ import com.smingsming.song.entity.song.repository.ISongRepository;
 import com.smingsming.song.global.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,8 +30,6 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final ISongRepository iSongRepository;
-    private final IAlbumRepository iAlbumRepository;
-    private final IArtistRepository iArtistRepository;
     private final IPlaylistRepository iPlaylistRepository;
     private final IPlaylistTrackRepository iPlaylistTrackRepository;
 
@@ -36,11 +37,20 @@ public class PlaylistServiceImpl implements IPlaylistService {
     // 플레이리스트 생성
     @Override
 
-    public PlaylistEntity addPlaylist(PlaylistAddReqVo playlistAddReqVo) {
+    public PlaylistEntity addPlaylist(PlaylistAddReqVo playlistAddReqVo, HttpServletRequest request) {
+
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
+
+        if(uuid == null) {
+            return null;
+        }
 
         ModelMapper mapper = new ModelMapper();
 
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
         PlaylistEntity mapPlaylistEntity = mapper.map(playlistAddReqVo, PlaylistEntity.class);
+        mapPlaylistEntity.setUuid(uuid);
 
         PlaylistEntity playlistEntity = iPlaylistRepository.save(mapPlaylistEntity);
 
@@ -48,33 +58,35 @@ public class PlaylistServiceImpl implements IPlaylistService {
             return playlistEntity;
         else
             return null;
-
     }
 
     // 플레이리스트 조회
     @Override
-    public List<PlaylistEntity> getPlaylist(Long userId) {
-        List<PlaylistEntity> playlist = iPlaylistRepository.findAllByUserId(userId);
+    public List<PlaylistVo> getPlaylist(String searchedUser, int page, HttpServletRequest request) {
+        String searchUser = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
 
-        if (!playlist.isEmpty()) {
-            return playlist;
-        }
-        return null;
+        Pageable pr = PageRequest.of(page - 1, 15, Sort.by("id").descending());
+
+        List<PlaylistVo> playlist = iPlaylistRepository.getAllByUuid(searchUser, searchedUser, pr);
+
+        return playlist;
     }
 
     // 플레이리스트 정보 수정
     @Override
+    @Transactional
     public PlaylistEntity editPlaylist(PlaylistUpdateReqVo playlistUpdateReqVo) {
 
-        Optional<PlaylistEntity> playlist = iPlaylistRepository.findById(playlistUpdateReqVo.getId());
+        PlaylistEntity playlist = iPlaylistRepository.findById(playlistUpdateReqVo.getId()).orElseThrow();
 
-        if (playlist.isPresent()) {
+        if (playlist != null) {
 
-            PlaylistUpdateReqVo updateReqVo = PlaylistUpdateReqVo.builder()
-                    .id(playlist.get().getId())
-                    .title(playlist.get().getTitle())
-                    .playlistThumbnail(playlistUpdateReqVo.getPlaylistThumbnail())
-                    .build();
+            if(playlistUpdateReqVo.getName() != null)
+                playlist.updateName(playlistUpdateReqVo.getName());
+            if(playlistUpdateReqVo.getThumbnail() != null)
+                playlist.updateThumbnail(playlistUpdateReqVo.getThumbnail());
+
+            return playlist;
         }
 
         return null;
@@ -82,12 +94,20 @@ public class PlaylistServiceImpl implements IPlaylistService {
 
     // 플레이리스트 삭제
     @Override
-    public boolean deletePlaylist(Long playlistId) {
+    @Transactional
+    public boolean deletePlaylist(Long playlistId, HttpServletRequest request) {
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
         Optional<PlaylistEntity> playlist = iPlaylistRepository.findById(playlistId);
 
+
         if (playlist.isPresent()) {
-            iPlaylistRepository.deleteById(playlistId);
-            return true;
+
+            if(playlist.get().getUuid().equals(uuid)) {
+                iPlaylistRepository.deleteById(playlistId);
+                iPlaylistTrackRepository.deleteAllByPlaylistId(playlistId);
+                return true;
+            }
+            return false;
         }
         return false;
     }
@@ -95,10 +115,16 @@ public class PlaylistServiceImpl implements IPlaylistService {
     // 플레이리스트 내 수록곡 추가
     @Override
     @Transactional
-    public String addTrack(PlaylistTrackAddReqVo playlistTrackAddReqVo) {
+    public String addTrack(PlaylistTrackAddReqVo playlistTrackAddReqVo, HttpServletRequest request) {
 
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
         SongEntity songEntity = iSongRepository.getById(playlistTrackAddReqVo.getSongId());
         PlaylistEntity playlistEntity = iPlaylistRepository.getById(playlistTrackAddReqVo.getPlaylistId());
+
+//        if (uuid.equals(playlistEntity.getUuid())) {
+        if (! uuid.equals(playlistEntity.getUuid())) {
+            return "본인의 플레이리스트에만 추가할 수 있습니다.";
+        }
 
         if (playlistEntity == null) {
             throw new IllegalStateException("플레이리스트가 존재하지 않습니다.");
@@ -120,55 +146,78 @@ public class PlaylistServiceImpl implements IPlaylistService {
         }
     }
 
+    // 플레이리스트 검색
+    @Override
+    public PlaylistSearchVo playlistSearch(String keyword, int page, HttpServletRequest request) {
+
+        Pageable pr = PageRequest.of(page - 1, 10, Sort.by("id").descending());
+
+        keyword = "%" + keyword + "%";
+
+        Page<PlaylistVo> result = iPlaylistRepository.findAllByTitleContains(keyword, pr);
+
+        return PlaylistSearchVo.builder()
+                .count(result.getTotalElements())
+                .result(result.getContent()).build();
+    }
+
+    // 플레이리스트 갯수 집계
+    @Override
+    public PlaylistCountVo countPlaylist(String uuid) {
+
+        Long playlistCount = iPlaylistRepository.countByUuid(uuid);
+
+        PlaylistCountVo playlistCountVo = new PlaylistCountVo(playlistCount);
+
+        return playlistCountVo;
+    }
+
     // 플레이리스트 내 수록곡 조회
     @Override
     @Transactional
     public PlaylistDetailVo getPlaylistTrack(Long playlistId, HttpServletRequest request) {
 
-        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
-        PlaylistEntity playlist = iPlaylistRepository.findById(playlistId).orElseThrow();
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
+//        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(jwtTokenProvider.resolveToken(request)));
+//        PlaylistEntity playlist = iPlaylistRepository.findById(playlistId).orElseThrow();
+        PlaylistVo playlist = iPlaylistRepository.getByIdWithLike(uuid, playlistId);
 
+        List<PlaylistTrackVo> trackList = iPlaylistTrackRepository.findAllByPlaylistId(playlistId);
 
-//        List<PlaylistTrackEntity> trackList = iPlaylistTrackRepository.findAllByPlaylistEntityId(playlistId);
-        List<PlaylistTrackEntity> trackList = iPlaylistTrackRepository.findAllByPlaylistId(playlistId);
-
-        List<PlaylistTrackVo> trackVoList = new ArrayList<>();
-        ModelMapper mapper = new ModelMapper();
-
-        trackList.forEach(v -> {
-            SongEntity song = iSongRepository.findById(v.getSongId()).get();
-
-//            String test = iArtistRepository.findById(v.getSongEntity().getArtist().getId()).get().getName();
-            trackVoList.add(PlaylistTrackVo.builder()
-//                    .name(song.getSongName())
-//                    .thumbnail(song.getAlbumEntity().getAlbumThumbnail())
-//                    .artistName(song.getArtist().getName())
-//                    .artistName(v.getSongEntity().getArtist().getName())
-                    .id(v.getId())
-                    .songId(v.getSongId())
-                    .playlistId(v.getPlaylistId())
-                    .build());
-                });
-
-        PlaylistDetailVo detailVo = PlaylistDetailVo.builder()
+        return PlaylistDetailVo.builder()
                 .playlistId(playlistId)
-                .name(playlist.getTitle())
+                .name(playlist.getPlaylistName())
                 .thumbnail(playlist.getPlaylistThumbnail())
-                .trackList(trackVoList)
+                .isLike(playlist.isPlaylistLike())
+                .trackList(trackList)
+                .userId(playlist.getUserId())
                 .build();
 
-        return detailVo;
+//        return detailVo;
+    }
+
+    @Override
+    public PlaylistEntity getPlaylistById(Long id) {
+        return iPlaylistRepository.findById(id).orElseThrow();
     }
 
     // 플레이리스트 내 수록곡 삭제
     @Override
-    public boolean deleteTrack(Long playlistTrackId) {
+    public boolean deleteTrack(Long playlistTrackId, HttpServletRequest request) {
 
+        String uuid = String.valueOf(jwtTokenProvider.getUuid(jwtTokenProvider.resolveToken(request)));
         Optional<PlaylistTrackEntity> playlistTrack = iPlaylistTrackRepository.findById(playlistTrackId);
 
         if (playlistTrack.isPresent()) {
-            iPlaylistTrackRepository.deleteById(playlistTrackId);
-            return true;
+            Optional<PlaylistEntity> playlist = iPlaylistRepository.findById(playlistTrack.get().getPlaylistId());
+
+            if (playlist.isPresent()) {
+                if (playlist.get().getUuid().equals(uuid)) {
+                    iPlaylistTrackRepository.deleteById(playlistTrackId);
+                    return true;
+
+                }
+            }
         }
         return false;
     }

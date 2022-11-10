@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Data
+@Builder
 @Entity
 @Table(name = "playlist")
 @AllArgsConstructor
@@ -34,31 +35,20 @@ public class PlaylistEntity {
     private String playlistThumbnail;
 
     @NotNull
-    private Long userId;
-
-//    private SongEntity songEntity;
-//
-//    private AlbumEntity albumEntity;
-
-    // 음악 넣기 !
+    private String uuid;
 
     @Builder
-    public PlaylistEntity(String title, String playlistThumbnail, Long userId) {
+    public PlaylistEntity(String title, String playlistThumbnail, String uuid) {
         this.title = title;
         this.playlistThumbnail = playlistThumbnail;
-        this.userId = userId;
+        this.uuid = uuid;
     }
 
+    public void updateName(String title) { this.title = title; }
     public void updateThumbnail(String playlistThumbnail) {
         this.playlistThumbnail = playlistThumbnail;
     }
 
-//    @OneToMany(
-//            mappedBy = "playlistEntity",
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true,
-//            fetch = FetchType.LAZY)
-//    private List<PlaylistLikesEntity> playlistLikesEntityList;
 
 }
 

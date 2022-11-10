@@ -1,6 +1,7 @@
 package com.smingsming.song.entity.artist.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "artist")
 @AllArgsConstructor
+@DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ArtistEntity {
 
@@ -19,7 +21,6 @@ public class ArtistEntity {
 
     @NotNull
     private String name;
-
     @NotNull
     private String artistThumbnail;
 
